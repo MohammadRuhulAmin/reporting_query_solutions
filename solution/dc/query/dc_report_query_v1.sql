@@ -114,4 +114,5 @@ FROM tofsil_info ti
 LEFT JOIN tofsil_khatian_info tki ON tki.tofsil_info_id = ti.id)tfsl
 GROUP BY tfsl.application_id
 ORDER BY tfsl.application_id)temp_tfsl ON temp_tfsl.application_id = a.application_id
+group by a.application_id 
 ORDER BY a.application_id;
