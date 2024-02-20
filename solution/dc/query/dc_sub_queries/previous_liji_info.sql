@@ -15,3 +15,4 @@ GROUP_CONCAT(`liji_duration`)liji_duration
 FROM(SELECT a.application_id app_id,pli.* FROM `applications` a
 LEFT JOIN `previous_liji_info` pli ON pli.application_id = a.application_id)tpli
 GROUP BY tpli.application_id
+order by tpli.application_id

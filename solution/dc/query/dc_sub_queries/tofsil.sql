@@ -15,3 +15,4 @@ tki.`mot_dabir_poriman`,tki.`mot_dabir_poriman_value`
 FROM tofsil_info ti
 LEFT JOIN tofsil_khatian_info tki ON tki.tofsil_info_id = ti.id)tfsl
 group by tfsl.application_id
+order by tfsl.application_id

@@ -20,3 +20,4 @@ GROUP_CONCAT(tprli.`present_official`)present_official
 FROM(SELECT a.application_id app_id,prli.* FROM `applications` a
 LEFT JOIN `present_liji_info` prli ON prli.application_id = a.application_id)tprli
 GROUP BY tprli.application_id
+order by tprli.application_id
