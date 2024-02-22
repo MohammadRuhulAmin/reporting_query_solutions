@@ -15,6 +15,11 @@ SELECT max(hist_id) max_HistID
 FROM `mutation_barisal`.`dashboard_reporting_raw`;
 
 
+SELECT IF(max_HistID>0,CONCAT('id>',max_HistID),CONCAT('created>=''2022-07-01'' AND id>',max_HistID)) AS "Condition"
+FROM (SELECT '2022-07-01' dt, IFNULL(MAX(hist_id),0) max_HistID
+FROM `mutation_barisal`.`dashboard_reporting_raw`) tmp
+
+
 
 
 
