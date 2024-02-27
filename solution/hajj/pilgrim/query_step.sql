@@ -30,3 +30,10 @@ LEFT JOIN PRP_DB.hajj_packages ON PRP_DB.registration_voucher.hajj_package_id = 
 WHERE PRP_DB.registration_voucher.id IN (reg_voucher_id_1, reg_voucher_id_2, ..., reg_voucher_id_n);
 
 
+#step-2 (Collect pid_flag, its need to add in unitMaster)
+#condition if package_ref_id > 0
+
+SELECT pid_flag FROM PRP_DB.hajj_packages
+WHERE id = package_ref_id;
+
+
