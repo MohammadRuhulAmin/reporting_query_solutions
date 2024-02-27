@@ -12,4 +12,4 @@ AND signature IS NOT NULL
 AND signature!='' 
 ORDER BY id LIMIT 10) tmp 
 WHERE signature!=''
-ORDER BY id LIMIT 5;
+ORDER BY id LIMIT 5; 
