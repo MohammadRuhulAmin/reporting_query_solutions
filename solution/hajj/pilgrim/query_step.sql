@@ -36,4 +36,20 @@ WHERE PRP_DB.registration_voucher.id IN (reg_voucher_id_1, reg_voucher_id_2, ...
 SELECT pid_flag FROM PRP_DB.hajj_packages
 WHERE id = package_ref_id;
 
+#step-3 (Collect all pilgrims regarding voucher)
+SELECT pilgrims.*, hs.id AS session_id, hs.caption AS session_value, hs.hijri
+FROM pilgrims
+LEFT JOIN PRP_DB.pilgrim_listing AS pl ON pl.id = pilgrims.pilgrim_listing_id
+LEFT JOIN PRP_DB.hajj_sessions AS hs ON hs.id = pl.session_id
+WHERE colName IN (voucher_id_1, voucher_id_2, ..., voucher_id_n)
+AND pilgrims.is_archived = 0
+AND pilgrims.is_registrable = 1
+AND pilgrims.serial_no > 0
+AND pilgrims.will_not_perform = 0
+AND pilgrims.payment_status = 12
+AND pilgrims.reg_payment_status = 12
+AND (colName <> 're_reg_voucher_id' OR pilgrims.re_reg_payment_status = 12);
+
+
+
 
