@@ -49,7 +49,7 @@ AND pilgrims.payment_status = 12
 AND pilgrims.reg_payment_status = 12
 AND (colName <> 're_reg_voucher_id' OR pilgrims.re_reg_payment_status = 12);
 
-#step-5 
+#step-5  
 SELECT pilgrims.*, hs.id AS session_id, hs.caption AS session_value, hs.hijri
 FROM pilgrims
 LEFT JOIN hmis_pilgrims ON hmis_pilgrims.ref_pilgrim_id = pilgrims.id
@@ -68,6 +68,43 @@ AND (colName <> 're_reg_voucher_id' OR pilgrims.re_reg_payment_status = 12)
 AND pilgrims.is_imported = 0
 AND hmis_pilgrims.pid IS NULL
 ORDER BY pilgrims.serial_no ASC;
+
+#step-7
+SELECT *
+FROM HmisPilgrimUnitMaster
+WHERE voucher_id IN (voucher_id_1, voucher_id_2, ..., voucher_id_n)
+LIMIT 1;
+
+
+#step-8
+SELECT *
+FROM HmisPilgrimUnitMaster
+WHERE agency_id = 0
+AND package_id = (
+    CASE 
+        WHEN is_p2g = 1 THEN package_ref_id
+        ELSE (SELECT hajj_package_id FROM vouchers_info LIMIT 1)
+    END
+)
+AND is_govt = 'Government'
+AND serial_no = SUBSTRING(CONCAT('0000', pre_unit_no), -4);
+
+
+
+#step-10
+
+UPDATE crm
+LEFT JOIN crm_to_do ON crm.id = crm_to_do.ref_crm_id
+SET crm.session_id = active_session_id_value,
+    crm_to_do.session_id = active_session_id_value
+WHERE crm.tracking_no IN ('tracking_no_1', 'tracking_no_2', ..., 'tracking_no_n');
+
+#step-12
+insert data 
+
+#step-13
+fetch some data
+
 
 
 
