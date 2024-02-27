@@ -29,7 +29,6 @@ FROM PRP_DB.registration_voucher
 LEFT JOIN PRP_DB.hajj_packages ON PRP_DB.registration_voucher.hajj_package_id = PRP_DB.hajj_packages.id
 WHERE PRP_DB.registration_voucher.id IN (reg_voucher_id_1, reg_voucher_id_2, ..., reg_voucher_id_n);
 
-
 #step-2 (Collect pid_flag, its need to add in unitMaster)
 #condition if package_ref_id > 0
 
@@ -49,6 +48,29 @@ AND pilgrims.will_not_perform = 0
 AND pilgrims.payment_status = 12
 AND pilgrims.reg_payment_status = 12
 AND (colName <> 're_reg_voucher_id' OR pilgrims.re_reg_payment_status = 12);
+
+#step-5 
+SELECT pilgrims.*, hs.id AS session_id, hs.caption AS session_value, hs.hijri
+FROM pilgrims
+LEFT JOIN hmis_pilgrims ON hmis_pilgrims.ref_pilgrim_id = pilgrims.id
+LEFT JOIN PRP_DB.pilgrim_listing AS pl ON (pl.id = CASE WHEN pilgrims.re_reg_listing_id != 0 THEN pilgrims.re_reg_listing_id ELSE pilgrims.pilgrim_listing_id END)
+LEFT JOIN PRP_DB.hajj_sessions AS hs ON (hs.id = pl.session_id)
+WHERE pilgrims.colName IN (voucher_id_1, voucher_id_2, ..., voucher_id_n)
+AND hmis_pilgrims.session_id = 'active_session_id_value'
+AND pilgrims.is_archived = 0
+AND pilgrims.is_registrable = 1
+AND pilgrims.serial_no > 0
+AND pilgrims.will_not_perform = 0
+AND pilgrims.payment_status = 12
+AND pilgrims.reg_payment_status = 12
+AND hs.state = 'active'
+AND (colName <> 're_reg_voucher_id' OR pilgrims.re_reg_payment_status = 12)
+AND pilgrims.is_imported = 0
+AND hmis_pilgrims.pid IS NULL
+ORDER BY pilgrims.serial_no ASC;
+
+
+
 
 
 
