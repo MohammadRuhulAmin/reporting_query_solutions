@@ -1,0 +1,14 @@
+# First of all Search Pilgrim by Voucher
+checking pilgrim info by ref_1
+if Voucher not exist run query ref_2
+
+
+step1
+collect voucher and package information
+step2
+collect pid_flag, it is needed to add in unitMaster
+step3
+collect all pilgrims regarding voucher
+step4
+
+
