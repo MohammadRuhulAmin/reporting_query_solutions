@@ -1,9 +1,10 @@
 # Select and join to retrive tracking_no also image 
-SELECT hp.tracking_no,CONVERT(YEAR(hpi.created_at),CHAR) created_year,CONVERT(hpi.created_at,CHAR) created_at,
+SELECT hpi.pilgrim_id,hpi.ref_pilgrim_id,hp.tracking_no,image_size,CONVERT(YEAR(hpi.created_at),CHAR) created_year,CONVERT(hpi.created_at,CHAR) created_at,
 SUBSTRING(hpi.details, LOCATE('/', hpi.details) + 1, LOCATE(';', hpi.details) - LOCATE('/', hpi.details) - 1) AS img_type,
+hpi.created_by,hpi.updated_at,hpi.updated_by,
 hpi.details FROM hmis_load.hmis_pilgrim_img hpi 
 LEFT JOIN hmis_load.hmis_pilgrims hp ON hp.id = hpi.pilgrim_id 
-WHERE hpi.pilgrim_id > ${max_pilgrim_id}
+WHERE hpi.pilgrim_id > 0
 AND hp.tracking_no IS NOT NULL
 ORDER BY hpi.pilgrim_id LIMIT 5;
 
