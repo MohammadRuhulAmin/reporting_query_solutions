@@ -1,5 +1,6 @@
 # Select and join to retrive tracking_no also image 
 SELECT hp.tracking_no,CONVERT(YEAR(hpi.created_at),CHAR) created_year,CONVERT(hpi.created_at,CHAR) created_at,
+SUBSTRING(hpi.details, LOCATE('/', hpi.details) + 1, LOCATE(';', hpi.details) - LOCATE('/', hpi.details) - 1) AS img_type,
 hpi.details FROM hmis_load.hmis_pilgrim_img hpi 
 LEFT JOIN hmis_load.hmis_pilgrims hp ON hp.id = hpi.pilgrim_id 
 WHERE hpi.pilgrim_id > ${max_pilgrim_id}
