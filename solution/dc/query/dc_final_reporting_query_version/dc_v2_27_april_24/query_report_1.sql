@@ -10,4 +10,5 @@ FROM `class_type_data` ctd
 GROUP BY application_id) ctd_temp
 ON ctd_temp.application_id = a.application_id
 LEFT JOIN applicant_info ai ON ai.application_id = a.application_id
-LEFT JOIN khatian_info ki ON ki.application_id = a.application_id;
+LEFT JOIN khatian_info ki ON ki.application_id = a.application_id
+ORDER BY a.application_id;
