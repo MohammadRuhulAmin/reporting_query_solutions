@@ -2,7 +2,7 @@ WITH RECURSIVE Ancestors AS (
     -- Anchor member: Select the initial row that starts the recursion (the given disaggregation_id)
     SELECT disaggregation_id, parent_id, NAME
     FROM sdg_disaggregation_langs
-    WHERE disaggregation_id = 91  -- Replace 19 with the specific disaggregation_id you're interested in
+    WHERE disaggregation_id = 99  -- Replace 19 with the specific disaggregation_id you're interested in
 
     UNION ALL
 
