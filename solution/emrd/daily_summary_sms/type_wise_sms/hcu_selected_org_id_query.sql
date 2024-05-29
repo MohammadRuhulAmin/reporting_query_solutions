@@ -2,7 +2,7 @@ SELECT(SELECT SUM(production) gas_production FROM `gas_production`
 WHERE report_date = DATE_SUB(CURDATE(),  INTERVAL 1 DAY) AND production_type = "gas") AS gas_prod, 
 #(SELECT SUM(production) gas_condensate FROM `gas_production` 
 #WHERE report_date = DATE_SUB(CURDATE(),  INTERVAL 1 DAY) AND production_type = "condensate") as condensate_prod,
-(SELECT SUM(opening_stock) total_opening_stock FROM oil_stock WHERE report_date = DATE_SUB(CURDATE(),  INTERVAL 1 DAY)) AS total_opening_stock,
+(SELECT SUM(opening_stock) total_opening_stock FROM oil_stock WHERE report_date = DATE_SUB(CURDATE(),  INTERVAL 1 DAY)) AS oil_stock,
 (SELECT quantity_mt FROM coal_daily_production WHERE report_date = DATE_SUB(CURDATE(),  INTERVAL 1 DAY)) AS coal_production,
 (SELECT SUM(sale) oil_sale FROM oil_sale WHERE report_date = DATE_SUB(CURDATE(), INTERVAL 1 DAY)) AS oil_sale,
 (SELECT SUM(production)lng_gas_production FROM gas_production WHERE gas_cat = "LNG" AND production_type = "gas" 
