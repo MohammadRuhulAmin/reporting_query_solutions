@@ -30,12 +30,12 @@ CASE
 WHEN DAY(date_field) IN (1, 21, 31) THEN 'st' WHEN DAY(date_field) IN (2, 22) THEN 'nd'
 WHEN DAY(date_field) IN (3, 23) THEN 'rd' ELSE 'th'
 END,' ', DATE_FORMAT(date_field, '%M, %Y')) AS formatted_date
-FROM (SELECT DATE_SUB(CURDATE(), INTERVAL 1 DAY) AS date_field) AS temp_date) yesterday_date
+FROM (SELECT DATE_SUB(CURDATE(), INTERVAL 1 DAY) AS date_field) AS temp_date) yesterday_date;
 
 
 
 
 current organization : 
 SELECT id,org_short_name FROM organization_info WHERE id 
-IN(1,9,10,11,19,23,24,25,28,22,23,24,25,26,27,28,20)
+IN(1,9,10,11,19,23,24,25,28,22,23,24,25,26,27,28,20);
 
