@@ -10,4 +10,4 @@ WITH RECURSIVE ancestors AS (
   INNER JOIN ancestors a ON s.source_id = a.parent_id AND s.language_id = 1
 )
 SELECT ROW_NUMBER() OVER (ORDER BY LEVEL) AS LEVEL, source_id, parent_id, NAME
-FROM ancestors
+FROM ancestors;
