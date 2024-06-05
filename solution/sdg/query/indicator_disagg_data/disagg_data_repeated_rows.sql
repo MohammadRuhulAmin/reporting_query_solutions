@@ -10,5 +10,6 @@ WHERE (ind_data_id, disagg_id) IN (
 WHERE ind_id = 
 (SELECT sid.indicator_id FROM sdg_indicator_details sid 
 LEFT JOIN sdg_indicators si ON si.id = sid.indicator_id
-WHERE sid.indicator_number  COLLATE utf8_bin = "10.6.1" AND sid.language_id = 1
- AND si.is_npt_thirty_nine = 0 AND si.is_plus_one = 0));
+WHERE sid.indicator_number  COLLATE utf8_bin = "10.6.1" 
+AND sid.language_id = 1
+AND si.is_npt_thirty_nine = 0 AND si.is_plus_one = 0));

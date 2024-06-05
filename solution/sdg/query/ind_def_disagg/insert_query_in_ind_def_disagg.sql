@@ -8,4 +8,4 @@ left join ind_definitions ixd on ixd.ind_id = ind_data.ind_id
 where ind_data_id in(SELECT temp.ind_data_id FROM(SELECT ind_id,
 GROUP_CONCAT(DISTINCT id) ind_data_id FROM indicator_data
 GROUP BY ind_id)temp)
-order by ind_data.ind_id
+order by ind_data.ind_id;
