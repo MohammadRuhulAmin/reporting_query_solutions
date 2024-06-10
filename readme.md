@@ -1,9 +1,9 @@
 ### Projects:
-- [] Mutation
-- [] SDG (UAT -> Production)
-- [] EMRD
-- [] DC Office
-- [] Hajj ETL
+- [x] Mutation
+- [x] SDG (UAT -> Production)
+- [x] EMRD
+- [x] DC Office
+- [x] Hajj ETL
 - [x] EBS
 
 ## Reporting Query of SDG, DC, Mutaiton
