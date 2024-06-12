@@ -1,5 +1,5 @@
 #using Limit Offset
-
+# Query supported by mysql v <= 5
 SELECT temp.draft_mig_date
 FROM (
 SELECT CURDATE()-1 - INTERVAL daynum DAY AS draft_mig_date
@@ -21,7 +21,7 @@ LIMIT 1 OFFSET 4;
 
 
 #using ROW_NUMBER() OVER() Function 
-
+#Query supported by mysql v>=8
 SELECT tempx.* FROM (
 SELECT temp.today_date, ROW_NUMBER() OVER (ORDER BY temp.today_date DESC) AS working_day_sl 
 FROM (
