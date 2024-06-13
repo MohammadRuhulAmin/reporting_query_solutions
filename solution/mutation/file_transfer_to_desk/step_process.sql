@@ -20,8 +20,7 @@ WHERE a.`case_main_status_id` = 3
 AND (a.`users_tagged_receive` = '["5"]' OR a.`users_tagged_receive` = '["9"]')
 AND cp.`id` IS NULL
 AND a.`accepted_at` < '2024-06-06'
-ORDER BY a.`id` DESC
-LIMIT 1;
+ORDER BY a.`id`;
 
 
 #step3: (update the tag)
