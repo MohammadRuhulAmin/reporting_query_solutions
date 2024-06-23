@@ -1,5 +1,6 @@
 #To ignore the same record while inserting using insert command
 #step1: first we have to specify the column name to be unique 
+#or ALTER TABLE temp ADD CONSTRAINT unique_name_email UNIQUE (NAME, email);
 #step2: then execute the insert ignore command 
 
 CREATE TABLE  temp (
