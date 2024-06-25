@@ -1,5 +1,7 @@
-#using Limit Offset
-# Query supported by mysql v <= 5
+#using Limit Offset Query supported by mysql v <= 5
+
+## To Get the previous nth working date 
+
 SELECT temp.draft_mig_date
 FROM (
 SELECT CURDATE()-1 - INTERVAL daynum DAY AS draft_mig_date
