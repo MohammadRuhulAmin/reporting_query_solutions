@@ -9,9 +9,9 @@ WHERE report_date = DATE_SUB(CURDATE(),  INTERVAL 1 DAY) AND production_type = "
 AND report_date = DATE_SUB(CURDATE(), INTERVAL 1 DAY)) AS lng_gas_production,
 (SELECT 
 CONCAT(
-FLOOR(IFNULL(SUM(CASE WHEN gas_cat = "NOC" THEN production ELSE 0 END),0))," + ",
-FLOOR(IFNULL(SUM(CASE WHEN gas_cat = "IOC" THEN production ELSE 0 END),0))," + ",
-FLOOR(IFNULL(SUM(CASE WHEN gas_cat = "LNG" THEN production ELSE 0 END),0)) 
+FLOOR(IFNULL(SUM(CASE WHEN gas_cat = "NOC" AND production_type = "gas" THEN production ELSE 0 END),0))," + ",
+FLOOR(IFNULL(SUM(CASE WHEN gas_cat = "IOC" AND production_type = "gas" THEN production ELSE 0 END),0))," + ",
+FLOOR(IFNULL(SUM(CASE WHEN gas_cat = "LNG" AND production_type = "gas" THEN production ELSE 0 END),0)) 
 ) AS total_sep_sum
 FROM gas_production
 WHERE report_date = DATE_SUB(CURDATE(),INTERVAL 1 DAY))AS "NOC_IOC_LNG",
