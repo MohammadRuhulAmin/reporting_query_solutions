@@ -7,7 +7,14 @@ WHERE report_date = DATE_SUB(CURDATE(),  INTERVAL 1 DAY) AND production_type = "
 (SELECT CONCAT(SUM(sale), " MT") oil_sale FROM oil_sale WHERE report_date = DATE_SUB(CURDATE(), INTERVAL 1 DAY)) AS oil_sale,
 (SELECT CONCAT(SUM(production), " MMCFD")lng_gas_production FROM gas_production WHERE gas_cat = "LNG" AND production_type = "gas" 
 AND report_date = DATE_SUB(CURDATE(), INTERVAL 1 DAY)) AS lng_gas_production,
-
+(SELECT 
+CONCAT(
+FLOOR(IFNULL(SUM(CASE WHEN gas_cat = "NOC" THEN production ELSE 0 END),0))," + ",
+FLOOR(IFNULL(SUM(CASE WHEN gas_cat = "IOC" THEN production ELSE 0 END),0))," + ",
+FLOOR(IFNULL(SUM(CASE WHEN gas_cat = "LNG" THEN production ELSE 0 END),0)) 
+) AS total_sep_sum
+FROM gas_production
+WHERE report_date = DATE_SUB(CURDATE(),INTERVAL 1 DAY))AS "NOC_IOC_LNG",
 (SELECT GROUP_CONCAT(DISTINCT temp.org_short_name) FROM 
 (SELECT DISTINCT oi.id, oi.org_short_name,gp.org_id FROM organization_info oi
 LEFT JOIN gas_production gp ON gp.org_id = oi.id
@@ -58,7 +65,9 @@ CASE
 WHEN DAY(date_field) IN (1, 21, 31) THEN 'st' WHEN DAY(date_field) IN (2, 22) THEN 'nd'
 WHEN DAY(date_field) IN (3, 23) THEN 'rd' ELSE 'th'
 END,' ', DATE_FORMAT(date_field, '%M, %Y')) AS formatted_date
-FROM (SELECT DATE_SUB(CURDATE(), INTERVAL 1 DAY) AS date_field) AS temp_date) yesterday_date;
+FROM (SELECT DATE_SUB(CURDATE(), INTERVAL 1 DAY) AS date_field) AS temp_date) yesterday_date,
+(SELECT CONCAT(SUM(production), ' (', (DATE_FORMAT(NOW(),'%M')) ,')') FROM lease_monthly_production ) AS hard_rock_production;
+
 
 
 /*
