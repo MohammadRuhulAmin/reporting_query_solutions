@@ -1,8 +1,8 @@
 SELECT(SELECT CONCAT(SUM(production), " MMCFD") gas_production FROM `gas_production` 
 WHERE report_date = DATE_SUB(CURDATE(),  INTERVAL 1 DAY) AND production_type = "gas") AS gas_prod, 
-#(SELECT SUM(production) gas_condensate FROM `gas_production` 
-#WHERE report_date = DATE_SUB(CURDATE(),  INTERVAL 1 DAY) AND production_type = "condensate") as condensate_prod,
-(SELECT CONCAT(SUM(opening_stock), " MT") total_opening_stock FROM oil_stock WHERE report_date = DATE_SUB(CURDATE(),  INTERVAL 1 DAY)) AS total_opening_stock,
+(SELECT SUM(production) gas_condensate FROM `gas_production` 
+WHERE report_date = DATE_SUB(CURDATE(),  INTERVAL 1 DAY) AND production_type = "condensate") AS condensate_production,
+(SELECT CONCAT(SUM(opening_stock), " MT") total_opening_stock FROM oil_stock WHERE report_date = DATE_SUB(CURDATE(),  INTERVAL 1 DAY)) AS oil_stock,
 (SELECT CONCAT(quantity_mt, " MT") FROM coal_daily_production WHERE report_date = DATE_SUB(CURDATE(),  INTERVAL 1 DAY)) AS coal_production,
 (SELECT CONCAT(SUM(sale), " MT") oil_sale FROM oil_sale WHERE report_date = DATE_SUB(CURDATE(), INTERVAL 1 DAY)) AS oil_sale,
 (SELECT CONCAT(SUM(production), " MMCFD")lng_gas_production FROM gas_production WHERE gas_cat = "LNG" AND production_type = "gas" 
@@ -66,12 +66,6 @@ WHEN DAY(date_field) IN (1, 21, 31) THEN 'st' WHEN DAY(date_field) IN (2, 22) TH
 WHEN DAY(date_field) IN (3, 23) THEN 'rd' ELSE 'th'
 END,' ', DATE_FORMAT(date_field, '%M, %Y')) AS formatted_date
 FROM (SELECT DATE_SUB(CURDATE(), INTERVAL 1 DAY) AS date_field) AS temp_date) yesterday_date,
-(SELECT CONCAT(SUM(production), ' (', (DATE_FORMAT(NOW(),'%M')) ,')') FROM lease_monthly_production ) AS hard_rock_production;
+(SELECT CONCAT(SUM(production), ' (', (DATE_FORMAT(NOW(),'%M')) ,')') FROM lease_monthly_production ) AS hard_rock_production
 
 
-
-/*
-CURRENT ORGANIZATION : 
-SELECT id,org_short_name FROM organization_info WHERE id 
-IN(1,9,10,11,19,23,24,25,28,22,23,24,25,26,27,28,20,12,14,16,17,13,15,18);
-*/
