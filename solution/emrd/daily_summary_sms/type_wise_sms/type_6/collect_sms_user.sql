@@ -1,5 +1,5 @@
 
-SELECT DISTINCT tempx.mobile, tempx.id, tempx.mobile FROM 
+SELECT DISTINCT tempx.mobile, tempx.id, tempx.email FROM 
 (SELECT email,id,mobile FROM users WHERE org_id = 5 AND mobile IS NOT NULL
 
 UNION 
