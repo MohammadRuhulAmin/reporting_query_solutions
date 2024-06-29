@@ -65,7 +65,6 @@ INSERT INTO `case_status_updates` (
 
 );
 
-#step 6:
 #step5: (update the tag)
 UPDATE  `applications`  
 SET  
