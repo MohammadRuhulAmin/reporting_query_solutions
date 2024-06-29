@@ -69,7 +69,7 @@ INSERT INTO `case_status_updates` (
 UPDATE  `applications`  
 SET  
 `users_tagged_receive`='["5"]'  ,
-users_tagged_send =`users_tagged_receive` ,
+user_tag_send =`users_tagged_receive` ,
 users_tagged_view = ["4"],
 case_main_status_id = 3
 WHERE id = '2897271';
