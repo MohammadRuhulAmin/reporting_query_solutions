@@ -73,7 +73,8 @@ WHEN DAY(date_field) IN (1, 21, 31) THEN 'st' WHEN DAY(date_field) IN (2, 22) TH
 WHEN DAY(date_field) IN (3, 23) THEN 'rd' ELSE 'th'
 END,' ', DATE_FORMAT(date_field, '%M, %Y')) AS formatted_date
 FROM (SELECT DATE_SUB(CURDATE(), INTERVAL 1 DAY) AS date_field) AS temp_date) yesterday_date,
-(SELECT CONCAT(ROUND(SUM(production)),' MT ', ' (', (DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 1 MONTH),'%M')) ,')') FROM lease_monthly_production ) AS hard_rock_production
+(SELECT CONCAT(ROUND(SUM(production)),' MT ', ' (', (DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 1 MONTH),'%M')) ,')') FROM lease_monthly_production ) 
+AS hard_rock_production
 
 
 

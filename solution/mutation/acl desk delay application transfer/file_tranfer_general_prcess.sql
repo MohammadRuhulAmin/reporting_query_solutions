@@ -2,22 +2,17 @@
 
 ## To Get the previous nth working date 
 
-SELECT temp.draft_mig_date
+SELECT temp.previous_date last_nth_working_date
+FROM (SELECT CURDATE() - INTERVAL seq_table.seq DAY AS previous_date
 FROM (
-SELECT CURDATE()-1 - INTERVAL daynum DAY AS draft_mig_date
-FROM
-(
-    SELECT sl_first* 10+ sl_second daynum
-    FROM
-        (SELECT 0 sl_first UNION SELECT 1 UNION SELECT 2 UNION SELECT 3) temp_x,
-        (SELECT 0 sl_second UNION SELECT 1 UNION SELECT 2 UNION SELECT 3
-        UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7
-        UNION SELECT 8 UNION SELECT 9) temp_y
-    WHERE sl_first*10+sl_second <= 15
-) temp_z
-ORDER BY draft_mig_date DESC)temp 
-WHERE 
-temp.draft_mig_date NOT IN (SELECT holiday_date FROM govt_holiday)
+  SELECT 0 AS seq UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+  UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9
+  UNION ALL SELECT 10 UNION ALL SELECT 11 UNION ALL SELECT 12 UNION ALL SELECT 13 UNION ALL SELECT 14
+  UNION ALL SELECT 15 UNION ALL SELECT 16
+) AS seq_table
+ORDER BY previous_date DESC)temp 
+WHERE temp.previous_date 
+NOT IN (SELECT holiday_date FROM `mutation_ext`.govt_holiday)
 LIMIT 1 OFFSET 4;
 
 
