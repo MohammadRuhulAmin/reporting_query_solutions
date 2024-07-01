@@ -2,7 +2,7 @@
 
 ## To Get the previous nth working date 
 
-SELECT temp.previous_date last_nth_working_date
+SELECT CAST(temp.previous_date AS CHAR) last_nth_working_date
 FROM (SELECT CURDATE() - INTERVAL seq_table.seq DAY AS previous_date
 FROM (
   SELECT 0 AS seq UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
