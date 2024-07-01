@@ -19,13 +19,34 @@ WHERE report_date = DATE_SUB(CURDATE(),INTERVAL 1 DAY))AS "NOC_IOC_LNG",
 (SELECT DISTINCT oi.id, oi.org_short_name,gp.org_id FROM organization_info oi
 LEFT JOIN gas_production gp ON gp.org_id = oi.id
 AND gp.report_date = DATE_SUB(CURDATE(), INTERVAL 1 DAY)
-WHERE oi.id IN (1,9,10,11)
+WHERE oi.id IN (9,10,11)
 UNION 
 
-SELECT DISTINCT oi.id, oi.org_short_name,gp.org_id FROM organization_info oi
-LEFT JOIN gas_production gp ON gp.org_id = oi.id AND (gas_cat = "LNG"
-AND gp.report_date = DATE_SUB(CURDATE(), INTERVAL 1 DAY)) 
-WHERE oi.id  = 19
+SELECT 19 AS id,"RPGCL" AS org_short_name,
+CASE WHEN COUNT(*) = 2 AND SUM(temp.org_id IS NULL) = 2 THEN NULL ELSE 19 
+END AS org_id FROM 
+(SELECT DISTINCT oi.id, oi.org_short_name, gp.org_id 
+FROM organization_info oi
+LEFT JOIN gas_production gp ON gp.org_id = oi.id 
+AND gas_cat = "LNG" 
+AND gp.report_date = DATE_SUB(CURDATE(), INTERVAL 1 DAY)
+WHERE oi.id IN (31, 32)) AS temp
+WHERE temp.org_id IS NULL 
+
+
+UNION
+
+SELECT 1 AS id,"Petrobangla" AS org_short_name,
+CASE WHEN COUNT(*) = 2 AND SUM(temp.org_id IS NULL) = 2 THEN NULL ELSE 1 
+END AS org_id FROM 
+(SELECT DISTINCT oi.id, oi.org_short_name, gp.org_id 
+FROM organization_info oi
+LEFT JOIN gas_production gp ON gp.org_id = oi.id 
+AND gas_cat = "IOC" 
+AND gp.report_date = DATE_SUB(CURDATE(), INTERVAL 1 DAY)
+WHERE oi.id IN (29, 30)) AS temp
+WHERE temp.org_id IS NULL 
+
 
 UNION
 SELECT oi.id, oi.org_short_name,cdp.org_id FROM organization_info oi 
@@ -73,10 +94,4 @@ WHEN DAY(date_field) IN (1, 21, 31) THEN 'st' WHEN DAY(date_field) IN (2, 22) TH
 WHEN DAY(date_field) IN (3, 23) THEN 'rd' ELSE 'th'
 END,' ', DATE_FORMAT(date_field, '%M, %Y')) AS formatted_date
 FROM (SELECT DATE_SUB(CURDATE(), INTERVAL 1 DAY) AS date_field) AS temp_date) yesterday_date,
-(SELECT CONCAT(ROUND(SUM(production)),' MT ', ' (', (DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 1 MONTH),'%M')) ,')') FROM lease_monthly_production ) 
-AS hard_rock_production
-
-
-
-
-
+(SELECT CONCAT(ROUND(SUM(production)),' MT ', ' (', (DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 1 MONTH),'%M')) ,')') FROM lease_monthly_production ) AS hard_rock_production;
