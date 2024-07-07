@@ -1,5 +1,6 @@
 # report those who provides data in gas_production table
-SELECT report_info.org_short_name company,report_info.last_update,report_info.report_submit_time,
+SELECT report_info.org_short_name company,report_info.last_update,
+DATE_FORMAT(CONVERT_TZ(report_info.report_submit_time, '+00:00', '-12:00'), '%Y-%m-%d %h:%i:%s') report_submit_time,
 report_info.update_on_time,org_info.responsible,org_info.mobile
 FROM
 (SELECT oi.org_short_name,gp.org_id,gp.report_date last_update, gp.created_at report_submit_time,
@@ -26,10 +27,10 @@ AND u.mobile IS NOT NULL
 GROUP BY u.org_id
 ORDER BY r.id)org_info
 ON org_info.org_id = report_info.org_id
-
 UNION ALL
 # report those who provides data in gas_transmission table
-SELECT report_info.org_short_name company,report_info.last_update,report_info.report_submit_time,
+SELECT report_info.org_short_name company,report_info.last_update,
+DATE_FORMAT(CONVERT_TZ(report_info.report_submit_time, '+00:00', '-12:00'), '%Y-%m-%d %h:%i:%s')report_submit_time,
 report_info.update_on_time,org_info.responsible,org_info.mobile
 FROM
 (SELECT oi.org_short_name,gt.org_id,gt.report_date last_update, gt.created_at report_submit_time,
@@ -58,7 +59,8 @@ ORDER BY r.id)org_info
 ON org_info.org_id = report_info.org_id
 UNION ALL
 # report those who provides data in gas_distribution table
-SELECT report_info.org_short_name company,report_info.last_update,report_info.report_submit_time,
+SELECT report_info.org_short_name company,report_info.last_update,
+DATE_FORMAT(CONVERT_TZ(report_info.report_submit_time, '+00:00', '-12:00'), '%Y-%m-%d %h:%i:%s')report_submit_time,
 report_info.update_on_time,org_info.responsible,org_info.mobile
 FROM
 (SELECT oi.org_short_name,gd.org_id,gd.report_date last_update, gd.created_at report_submit_time,
