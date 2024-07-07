@@ -3,7 +3,9 @@ SELECT report_info.org_short_name company,report_info.last_update,report_info.re
 report_info.update_on_time,org_info.responsible,org_info.mobile
 FROM
 (SELECT oi.org_short_name,gp.org_id,gp.report_date last_update, gp.created_at report_submit_time,
-CASE WHEN (gp.created_at - INTERVAL 1 DAY >  CONCAT(gp.report_date," 17:00:00")) THEN "No"
+CASE 
+WHEN (DATE(gp.created_at) != gp.report_date AND gp.created_at - INTERVAL 1 DAY >  CONCAT(gp.report_date," 17:00:00")) THEN "No"
+WHEN (DATE(gp.created_at)  = gp.report_date AND gp.created_at  >  CONCAT(gp.report_date," 17:00:00")) THEN "No"
 ELSE "Yes" END AS update_on_time
 FROM gas_production gp
 INNER JOIN
@@ -24,3 +26,4 @@ AND u.mobile IS NOT NULL
 GROUP BY u.org_id
 ORDER BY r.id)org_info
 ON org_info.org_id = report_info.org_id;
+
