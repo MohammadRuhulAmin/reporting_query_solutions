@@ -55,15 +55,33 @@ WHERE r.name LIKE "%Admin%"
 AND u.mobile IS NOT NULL
 GROUP BY u.org_id
 ORDER BY r.id)org_info
+ON org_info.org_id = report_info.org_id
+UNION ALL
+# report those who provides data in gas_distribution table
+SELECT report_info.org_short_name company,report_info.last_update,report_info.report_submit_time,
+report_info.update_on_time,org_info.responsible,org_info.mobile
+FROM
+(SELECT oi.org_short_name,gd.org_id,gd.report_date last_update, gd.created_at report_submit_time,
+CASE 
+WHEN (DATE(gd.created_at) != gd.report_date AND gd.created_at - INTERVAL 1 DAY >  CONCAT(gd.report_date," 17:00:00")) THEN "No"
+WHEN (DATE(gd.created_at)  = gd.report_date AND gd.created_at  >  CONCAT(gd.report_date," 17:00:00")) THEN "No"
+ELSE "Yes" END AS update_on_time
+FROM gas_distribution gd
+INNER JOIN
+(SELECT org_id,MAX(report_date) report_date FROM `gas_distribution`
+GROUP BY org_id) max_info
+ON max_info.org_id = gd.org_id AND 
+max_info.report_date = gd.report_date
+LEFT JOIN organization_info oi ON oi.id = gd.org_id 
+GROUP BY gd.org_id
+ORDER BY gd.created_at DESC)report_info
+LEFT JOIN 
+(SELECT r.id,r.name ,mhr.model_id,u.mobile,u.org_id,
+CONCAT(IFNULL(u.first_name,"")," ",IFNULL(u.last_name,"")) responsible FROM `roles` r
+LEFT JOIN model_has_roles mhr ON mhr.role_id = r.id
+LEFT JOIN users u ON u.id = mhr.model_id
+WHERE r.name LIKE "%Admin%" 
+AND u.mobile IS NOT NULL
+GROUP BY u.org_id
+ORDER BY r.id)org_info
 ON org_info.org_id = report_info.org_id;
-
-
-
-
-
-
-
-
-
-
-
