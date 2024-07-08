@@ -33,7 +33,6 @@ AND gp.report_date = DATE_SUB(CURDATE(), INTERVAL 1 DAY)
 WHERE oi.id IN (31, 32)) AS temp
 WHERE temp.org_id IS NULL 
 
-
 UNION
 
 SELECT 1 AS id,"Petrobangla" AS org_short_name,
@@ -54,15 +53,22 @@ LEFT JOIN coal_daily_production cdp ON cdp.org_id = oi.id
 AND cdp.report_date =  DATE_SUB(CURDATE(), INTERVAL 1 DAY) 
 WHERE oi.id = 20 
 UNION 
-SELECT DISTINCT oi.id, oi.org_short_name,ost.org_id FROM organization_info oi
+
+SELECT stock_sale.id,stock_sale.stock_s_nm org_short_name,
+CASE WHEN stock_sale.stock_org_id IS NULL AND stock_sale.sale_org_id IS NULL THEN NULL
+ELSE stock_sale.stock_org_id END AS org_id FROM
+(SELECT oil_stock_family.*,oil_sale_family.* FROM
+(SELECT DISTINCT oi.id , oi.org_short_name stock_s_nm,ost.org_id  stock_org_id FROM organization_info oi
 LEFT JOIN oil_stock ost ON ost.org_id = oi.id
 AND ost.report_date = DATE_SUB(CURDATE(), INTERVAL 1 DAY)
-WHERE oi.id IN (23, 24, 25, 28)
-UNION 
-SELECT DISTINCT oi.id, oi.org_short_name,osa.org_id FROM organization_info oi
+WHERE oi.id IN (22,23, 24, 25,26,27, 28))oil_stock_family
+LEFT JOIN 
+(SELECT DISTINCT  oi.org_short_name sale_s_nm ,osa.org_id sale_org_id FROM organization_info oi
 LEFT JOIN oil_sale osa ON osa.org_id = oi.id
 AND osa.report_date = DATE_SUB(CURDATE(), INTERVAL 1 DAY)
-WHERE oi.id IN (22, 23, 24, 25, 26, 27, 28)
+WHERE oi.id IN (22, 23, 24, 25, 26, 27, 28))oil_sale_family
+ON oil_stock_family.stock_s_nm = oil_sale_family.sale_s_nm)stock_sale
+
 UNION
 SELECT DISTINCT oi.id,oi.org_short_name , gt.org_id FROM  organization_info oi
 LEFT JOIN gas_transmission gt ON gt.org_id = oi.id
@@ -94,4 +100,5 @@ WHEN DAY(date_field) IN (1, 21, 31) THEN 'st' WHEN DAY(date_field) IN (2, 22) TH
 WHEN DAY(date_field) IN (3, 23) THEN 'rd' ELSE 'th'
 END,' ', DATE_FORMAT(date_field, '%M, %Y')) AS formatted_date
 FROM (SELECT DATE_SUB(CURDATE(), INTERVAL 1 DAY) AS date_field) AS temp_date) yesterday_date,
-(SELECT CONCAT(ROUND(SUM(production)),' MT ', ' (', (DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 1 MONTH),'%M')) ,')') FROM lease_monthly_production ) AS hard_rock_production;
+(SELECT CONCAT(ROUND(SUM(production)),' MT ', ' (', (DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 1 MONTH),'%M')) ,')') 
+FROM lease_monthly_production ) AS hard_rock_production;
