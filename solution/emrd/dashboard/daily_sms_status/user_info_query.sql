@@ -1,7 +1,7 @@
 SELECT r.name `role`,user_with_role_info.* FROM
 (SELECT mhr.role_id,user_basic_info.* FROM
 (SELECT  tempx.email,tempx.user_name, tempx.id user_id, tempx.mobile FROM 
-(SELECT email,CONCAT(IFNULL(first_name,""),IFNULL(last_name,"")) user_name,id,mobile FROM users WHERE org_id = 9 AND mobile IS NOT NULL
+(SELECT email,CONCAT(IFNULL(first_name,""),IFNULL(last_name,"")) user_name,id,mobile FROM users WHERE org_id = ${org_id} AND mobile IS NOT NULL
 
 UNION 
 
