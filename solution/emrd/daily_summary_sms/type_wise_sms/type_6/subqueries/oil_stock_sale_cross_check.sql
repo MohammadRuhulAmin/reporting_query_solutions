@@ -11,4 +11,4 @@ LEFT JOIN
 LEFT JOIN oil_sale osa ON osa.org_id = oi.id
 AND osa.report_date = DATE_SUB(CURDATE(), INTERVAL 1 DAY)
 WHERE oi.id IN (22, 23, 24, 25, 26, 27, 28))oil_sale_family
-ON oil_stock_family.stock_s_nm = oil_sale_family.sale_s_nm)stock_sale
+ON oil_stock_family.stock_s_nm = oil_sale_family.sale_s_nm)stock_sale;
