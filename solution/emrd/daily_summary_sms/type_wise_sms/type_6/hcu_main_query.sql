@@ -2,7 +2,7 @@ SELECT(SELECT CONCAT(ROUND(SUM(production)), " MMCFD") gas_production FROM `gas_
 WHERE report_date = DATE_SUB(CURDATE(),  INTERVAL 1 DAY) AND production_type = "gas") AS gas_prod, 
 (SELECT ROUND(SUM(production)) gas_condensate FROM `gas_production` 
 WHERE report_date = DATE_SUB(CURDATE(),  INTERVAL 1 DAY) AND production_type = "condensate") AS condensate_production,
-(SELECT CONCAT(ROUND(SUM(opening_stock)), " MT") total_opening_stock FROM oil_stock WHERE report_date = DATE_SUB(CURDATE(),  INTERVAL 1 DAY)) AS oil_stock,
+(SELECT CONCAT(ROUND(SUM(present_stock)), " MT") total_opening_stock FROM oil_stock WHERE report_date = DATE_SUB(CURDATE(),  INTERVAL 1 DAY)) AS oil_stock,
 (SELECT CONCAT(quantity_mt, " MT") FROM coal_daily_production WHERE report_date = DATE_SUB(CURDATE(),  INTERVAL 1 DAY)) AS coal_production,
 (SELECT CONCAT(ROUND(SUM(sale)), " MT") oil_sale FROM oil_sale WHERE report_date = DATE_SUB(CURDATE(), INTERVAL 1 DAY)) AS oil_sale,
 (SELECT CONCAT(SUM(production), " MMCFD")lng_gas_production FROM gas_production WHERE gas_cat = "LNG" AND production_type = "gas" 
@@ -15,7 +15,8 @@ FLOOR(IFNULL(SUM(CASE WHEN gas_cat = "LNG" AND production_type = "gas" THEN prod
 ) AS total_sep_sum
 FROM gas_production
 WHERE report_date = DATE_SUB(CURDATE(),INTERVAL 1 DAY))AS "NOC_IOC_LNG",
-(SELECT GROUP_CONCAT(DISTINCT temp.org_short_name) FROM 
+(SELECT CASE WHEN LENGTH(GROUP_CONCAT(DISTINCT temp.org_short_name))= 0 THEN "N/A"
+ELSE GROUP_CONCAT(DISTINCT temp.org_short_name) END AS temp_list FROM 
 (SELECT DISTINCT oi.id, oi.org_short_name,gp.org_id FROM organization_info oi
 LEFT JOIN gas_production gp ON gp.org_id = oi.id
 AND gp.report_date = DATE_SUB(CURDATE(), INTERVAL 1 DAY)
