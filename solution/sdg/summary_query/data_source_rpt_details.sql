@@ -9,3 +9,8 @@ LEFT JOIN ind_def_sources ids ON ids.source_id = tbl_agency.ind_src_id
 LEFT JOIN sdg_indicators si ON si.id = ids.ind_id
 LEFT JOIN sdg_goals sg ON sg.id = si.goal_id
 WHERE ids.ind_id IS NOT NULL;
+
+
+SELECT si.id sdg_indicators_id,MAX(ind.data_period) last_reporting_year FROM sdg_indicators si
+LEFT JOIN indicator_data ind ON ind.ind_id = si.id
+GROUP BY si.id
