@@ -22,3 +22,16 @@ LEFT JOIN
 base_data_period +(data_frequency_year*CEIL((YEAR(NOW())-base_data_period)/data_frequency_year)) next_year_report
 FROM ind_definitions WHERE base_data_period <> 0000)temp4 ON temp4.ind_id = temp3.foreign_id;
 
+#####################
+
+SELECT ind_sources.id ind_src_id, office_agency_id,office_agencies.name FROM ind_sources 
+LEFT JOIN office_agencies ON office_agencies.id = ind_sources.office_agency_id 
+WHERE office_agency_id > 0 GROUP BY office_agency_id
+UNION
+SELECT ind_sources.id, ministry_division_id,ministry_divisions.name FROM ind_sources 
+LEFT JOIN ministry_divisions ON ministry_divisions.id = ind_sources.ministry_division_id 
+WHERE office_agency_id = 0 AND ministry_division_id > 0 GROUP BY ministry_division_id
+UNION
+SELECT ind_sources.id, ministry_id,ministries.name FROM ind_sources 
+LEFT JOIN ministries ON ministries.id = ind_sources.ministry_id 
+WHERE office_agency_id = 0 AND ministry_division_id = 0 AND ministry_id >0 GROUP BY ministry_id
