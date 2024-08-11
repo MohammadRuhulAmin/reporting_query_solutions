@@ -22,7 +22,7 @@ LEFT JOIN indicator_data ind ON ind.ind_id = si.id
 GROUP BY si.id)temp2 ON temp2.sdg_indicators_idx = temp1.sdg_indicators_id)temp3
 LEFT JOIN 
 (SELECT ind_id,base_data_period,data_frequency_year, 
-base_data_period +(data_frequency_year*CEIL((YEAR(NOW())-base_data_period)/data_frequency_year)) next_year_report
+base_data_period +(data_frequency_year*CEIL((YEAR(NOW())-base_data_period)/data_frequency_year)) next_reporting_year
 FROM ind_definitions WHERE base_data_period <> 0000)temp4 ON temp4.ind_id = temp3.foreign_id;
 
 
