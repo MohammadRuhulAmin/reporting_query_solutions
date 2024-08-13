@@ -7,7 +7,7 @@ oma.`union_office_id`,
 a.`mouja_id`,
 a.`case_main_status_id`, 
 csu_rec.`created` receive_date,
-CASE WHEN a.`case_main_status_id` IN (9,27,39) THEN cas.`created`
+CASE WHEN a.`case_main_status_id` IN (9,27,39) THEN cas.`created` #updated 39
 WHEN a.`case_main_status_id` IN (20,22) THEN csu_kha_final.`created` END disposed_date,
 app_hist.created hist_date,
 cp.user_id proposal_sub_ulao_id,
@@ -22,7 +22,7 @@ FROM `mutation_barisal`.`case_status_updates` app_hist
 LEFT JOIN `mutation_barisal`.`applications` a ON app_hist.`application_id`=a.id 
 LEFT JOIN `mutation_barisal`.`office_wise_mouja_assign` oma ON a.`mouja_id`=oma.`mouja_id`
 LEFT JOIN `mutation_barisal`.`case_status_updates` csu_rec ON csu_rec.`application_id`=a.`id` AND csu_rec.`case_status_id`=2
-LEFT JOIN `mutation_barisal`.`case_status_updates` cas ON a.id=cas.application_id AND cas.case_status_id IN (9,27,39)
+LEFT JOIN `mutation_barisal`.`case_status_updates` cas ON a.id=cas.application_id AND cas.case_status_id IN (9,27,39)  #updated 39
 LEFT JOIN `mutation_barisal`.`case_status_updates` csu_l_order ON csu_l_order.`application_id`=a.`id`AND csu_l_order.`case_status_id`=19
 LEFT JOIN `mutation_barisal`.`case_status_updates` csu_kha_final ON csu_kha_final.`application_id`=a.`id`AND csu_kha_final.`case_status_id`=20
 LEFT JOIN `mutation_barisal`.`case_proposals` cp ON a.id=cp.application_id
