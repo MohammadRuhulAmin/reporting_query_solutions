@@ -17,7 +17,7 @@ WHERE office_agency_id = 0 AND ministry_division_id = 0 AND ministry_id >0
 UNION
 SELECT ind_sources.id ind_src_id, ind_sources.survey_id,`ind_data_source_survey`.name agency FROM ind_sources 
 LEFT JOIN `ind_data_source_survey` ON `ind_data_source_survey`.id = ind_sources.survey_id 
-WHERE ind_sources.survey_id = 123
+WHERE ind_sources.ministry_id = 0 AND ind_sources.ministry_division_id = 0 AND ind_sources.office_agency_id = 0
 )tbl_agency
 LEFT JOIN ind_def_sources ids ON ids.source_id = tbl_agency.ind_src_id
 LEFT JOIN sdg_indicators si ON si.id = ids.ind_id 
@@ -51,7 +51,8 @@ WHERE office_agency_id = 0 AND ministry_division_id > 0
 UNION
 SELECT ind_sources.id, ministry_id,ministries.name FROM ind_sources 
 LEFT JOIN ministries ON ministries.id = ind_sources.ministry_id 
-WHERE office_agency_id = 0 AND ministry_division_id = 0 AND ministry_id >0)tbl_agency
+WHERE office_agency_id = 0 AND ministry_division_id = 0 AND ministry_id >0
+)tbl_agency
 LEFT JOIN ind_def_sources ids ON ids.source_id = tbl_agency.ind_src_id
 LEFT JOIN sdg_indicators si ON si.id = ids.ind_id 
 LEFT JOIN sdg_target_details sdg_td ON sdg_td.target_id = si.target_id AND sdg_td.language_id = 1
