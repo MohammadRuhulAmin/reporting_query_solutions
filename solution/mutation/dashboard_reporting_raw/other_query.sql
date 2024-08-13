@@ -2,7 +2,7 @@ SELECT GROUP_CONCAT(MaxiD ORDER BY MaxiD) HistID,MAX(MaxiD) MaxiD
 FROM (SELECT MAX(id ) MaxiD 
 FROM (SELECT id,application_id,created   
 FROM `mutation_barisal`.`case_status_updates` 
-WHERE `case_status_id` IN (9,20,27) 
+WHERE `case_status_id` IN (9,20,27,39) 
 AND id>${max_HistID}
 ORDER BY id 
 LIMIT 100) tmp 
