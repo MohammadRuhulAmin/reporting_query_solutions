@@ -72,3 +72,15 @@ FROM(SELECT idd.ind_id,CONCAT(dt.name,":",GROUP_CONCAT(idd.disagg_name)) disagg_
 LEFT JOIN disaggregation_type dt ON dt.id = idd.disagg_type_id
 GROUP BY idd.ind_id,idd.disagg_type_id)temp4
 GROUP BY temp4.ind_id;
+
+
+########################
+
+
+SELECT ind_def.ind_id,CONCAT(CASE 
+WHEN DAY(DATE(ind_def.last_entry_date)) IN (1, 21, 31) THEN CONCAT(DAY(DATE(ind_def.last_entry_date)), 'st')
+WHEN DAY(DATE(ind_def.last_entry_date)) IN (2, 22) THEN CONCAT(DAY(DATE(ind_def.last_entry_date)), 'nd')
+WHEN DAY(DATE(ind_def.last_entry_date)) IN (3, 23) THEN CONCAT(DAY(DATE(ind_def.last_entry_date)), 'rd')
+ELSE CONCAT(DAY(DATE(ind_def.last_entry_date)), 'th')
+END,", ",DATE_FORMAT(ind_def.last_entry_date, '%M')) AS formatted_date
+FROM ind_definitions ind_def;
