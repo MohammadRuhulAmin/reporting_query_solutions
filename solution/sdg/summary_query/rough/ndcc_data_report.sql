@@ -47,3 +47,19 @@ AND ind_data.source_id = temp_min_data.source_id
 AND ind_data.data_period = temp_min_data.b_year
 LEFT JOIN ind_sources ind_src ON ind_src.id = ind_data.source_id)temp2
 LEFT JOIN ind_data_source_survey idss ON idss.id = temp2.survey_id
+
+
+#########################################
+SELECT temp3.*,idss.name  c_source
+FROM(SELECT ind_data.ind_id, ind_data.source_id,ind_src.survey_id, ind_data.data_value c_data,ind_data.data_period c_year
+FROM indicator_data ind_data
+INNER JOIN (
+    SELECT ind.ind_id, ind.source_id, MAX(ind.data_period) AS b_year
+    FROM indicator_data ind
+    GROUP BY ind.ind_id, ind.source_id
+) temp_min_data
+ON ind_data.ind_id = temp_min_data.ind_id
+AND ind_data.source_id = temp_min_data.source_id
+AND ind_data.data_period = temp_min_data.b_year
+LEFT JOIN ind_sources ind_src ON ind_src.id = ind_data.source_id)temp3
+LEFT JOIN ind_data_source_survey idss ON idss.id = temp3.survey_id
