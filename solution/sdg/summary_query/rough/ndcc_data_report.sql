@@ -18,12 +18,32 @@ WHERE ind_sources.ministry_id = 0 AND ind_sources.ministry_division_id = 0 AND i
 LEFT JOIN ind_def_sources ids ON ids.source_id = tbl_agency.ind_src_id)temp0
 LEFT JOIN ind_data_source_survey idss ON idss.id = temp0.survey_id
 LEFT JOIN 
-(SELECT si.id ind_id,CONCAT(sid.indicator_number,' ',sid.short_title) sdg_indicator,ti.sequence_en 
+(SELECT si.id ind_id,CONCAT(sid.indicator_number,' ',sid.short_title) sdg_indicator,
+ti.sequence_en, CASE WHEN id.data_frequency_year = 1 THEN "Annual" WHEN id.data_frequency_year = 2 THEN "Bi-annual"
+WHEN id.data_frequency_year = 3 THEN "Triennial" WHEN id.data_frequency_year = 4 THEN "Quadrennial"
+WHEN id.data_frequency_year = 5 THEN "Five-yearly" WHEN id.data_frequency_year = 10 THEN "Ten-yearly"
+ELSE NULL END AS reporting_frequency
 FROM sdg_indicator_details sid
 LEFT JOIN sdg_indicators si ON sid.indicator_id = si.id
 LEFT JOIN tiers ti ON ti.id = si.tier_id
 LEFT JOIN ind_def_sources ids ON si.id = ids.ind_id
+LEFT JOIN ind_definitions id ON id.ind_id = sid.indicator_id AND sid.language_id = 1
 WHERE sid.language_id = 1 AND si.parent_indicator_id = 0 AND si.is_child = 0 
 AND si.is_npt_thirty_nine = 0 AND si.is_sdg = 1  AND si.is_plus_one = 0)temp1
-ON temp1.ind_id = temp0.ind_id
+ON temp1.ind_id = temp0.ind_id;
 
+
+#######################################
+SELECT temp2.*,idss.name  b_source
+FROM(SELECT ind_data.ind_id, ind_data.source_id,ind_src.survey_id, ind_data.data_value b_data,ind_data.data_period b_year
+FROM indicator_data ind_data
+INNER JOIN (
+    SELECT ind.ind_id, ind.source_id, MIN(ind.data_period) AS b_year
+    FROM indicator_data ind
+    GROUP BY ind.ind_id, ind.source_id
+) temp_min_data
+ON ind_data.ind_id = temp_min_data.ind_id
+AND ind_data.source_id = temp_min_data.source_id
+AND ind_data.data_period = temp_min_data.b_year
+LEFT JOIN ind_sources ind_src ON ind_src.id = ind_data.source_id)temp2
+LEFT JOIN ind_data_source_survey idss ON idss.id = temp2.survey_id
