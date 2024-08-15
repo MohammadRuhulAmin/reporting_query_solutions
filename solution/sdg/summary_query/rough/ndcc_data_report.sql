@@ -63,3 +63,12 @@ AND ind_data.source_id = temp_min_data.source_id
 AND ind_data.data_period = temp_min_data.b_year
 LEFT JOIN ind_sources ind_src ON ind_src.id = ind_data.source_id)temp3
 LEFT JOIN ind_data_source_survey idss ON idss.id = temp3.survey_id
+
+
+#######################
+
+SELECT temp4.ind_id,GROUP_CONCAT(temp4.disagg_nm_lst SEPARATOR ';') min_disagg_dimention
+FROM(SELECT idd.ind_id,CONCAT(dt.name,":",GROUP_CONCAT(idd.disagg_name)) disagg_nm_lst FROM ind_def_disagg idd
+LEFT JOIN disaggregation_type dt ON dt.id = idd.disagg_type_id
+GROUP BY idd.ind_id,idd.disagg_type_id)temp4
+GROUP BY temp4.ind_id;
