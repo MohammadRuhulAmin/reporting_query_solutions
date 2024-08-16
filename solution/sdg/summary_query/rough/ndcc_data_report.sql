@@ -84,3 +84,5 @@ WHEN DAY(DATE(ind_def.last_entry_date)) IN (3, 23) THEN CONCAT(DAY(DATE(ind_def.
 ELSE CONCAT(DAY(DATE(ind_def.last_entry_date)), 'th')
 END,", ",DATE_FORMAT(ind_def.last_entry_date, '%M')) AS formatted_date
 FROM ind_definitions ind_def;
+
+
