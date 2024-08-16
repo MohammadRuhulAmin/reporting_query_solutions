@@ -14,7 +14,7 @@ GROUP BY si.id,sdg_indicator,sequence_en,reporting_frequency
 
 
 
-SELECT tbl_agency.*,ids.ind_id,idss.name activity FROM
+SELECT tbl_agency.*, idss.name activity,ids.ind_id,ids.source_id FROM
 (SELECT ind_sources.id ind_src_id, office_agency_id,survey_id,office_agencies.name institution FROM ind_sources 
 LEFT JOIN office_agencies ON office_agencies.id = ind_sources.office_agency_id 
 WHERE ind_sources.office_agency_id > 0 
@@ -31,9 +31,7 @@ SELECT ind_sources.id ind_src_id, ind_sources.survey_id,ind_sources.survey_id,`i
 LEFT JOIN `ind_data_source_survey` ON `ind_data_source_survey`.id = ind_sources.survey_id 
 WHERE ind_sources.ministry_id = 0 AND ind_sources.ministry_division_id = 0 AND ind_sources.office_agency_id = 0)tbl_agency
 LEFT JOIN ind_data_source_survey idss ON idss.id = tbl_agency.survey_id
-LEFT JOIN ind_def_sources ids ON ids.source_id = tbl_agency.ind_src_id
-GROUP BY tbl_agency.ind_src_id,tbl_agency.office_agency_id,tbl_agency.survey_id,tbl_agency.institution,
-ids.ind_id,activity
+INNER JOIN ind_def_sources ids ON ids.source_id = tbl_agency.ind_src_id
 
 
 
