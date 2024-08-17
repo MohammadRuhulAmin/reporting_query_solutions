@@ -19,9 +19,9 @@ LEFT JOIN `ind_data_source_survey` ON `ind_data_source_survey`.id = ind_sources.
 WHERE ind_sources.ministry_id = 0 AND ind_sources.ministry_division_id = 0 AND ind_sources.office_agency_id = 0)tbl_agency
 LEFT JOIN ind_data_source_survey idss ON idss.id = tbl_agency.survey_id
 INNER JOIN ind_def_sources ids ON ids.source_id = tbl_agency.ind_src_id)sq1
-LEFT JOIN 
+LEFT JOIN
 (SELECT tmd.ind_id,tmd.source_id,tmd.b_year,ind_data.data_value data_value_b FROM indicator_data ind_data
-INNER JOIN 
+INNER JOIN
 (SELECT ind.ind_id, ind.source_id, MIN(ind.data_period) AS b_year
 FROM indicator_data ind
 WHERE STATUS = 4
@@ -31,7 +31,7 @@ ind_data.source_id = tmd.source_id AND
 ind_data.data_period = tmd.b_year
 WHERE ind_data.data_value IS NOT NULL)sq2 ON sq1.ind_id = sq2.ind_id AND sq1.source_id = sq2.source_id
 
-LEFT JOIN 
+LEFT JOIN
 (SELECT tmd.ind_id,tmd.source_id,tmd.c_year,ind_data.data_value data_value_c FROM indicator_data ind_data
 INNER JOIN 
 (SELECT ind.ind_id, ind.source_id, MAX(ind.data_period) AS c_year
