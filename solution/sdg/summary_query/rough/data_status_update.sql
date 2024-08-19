@@ -10,7 +10,7 @@ COUNT(temp0.next_report_year) total_next_report_year,
 SUM(CASE WHEN temp0.data_period IS NULL THEN 1 ELSE 0 END) AS missing_data_year
 FROM(SELECT tempx.*,tempy.*,tempz.last_entry_date, CONCAT(tempy.data_period+1,"-",tempz.last_entry_date) deadline FROM
 (SELECT ind_id,source_id,next_report_year FROM data_update_status 
-WHERE  next_report_year < YEAR(NOW()) ORDER BY ind_id,source_id)tempx
+WHERE  next_report_year <=YEAR(NOW()) ORDER BY ind_id,source_id)tempx
 LEFT JOIN
 (SELECT ind_data.ind_id ind_idx,ind_data.source_id source_idx,ind_data.data_period 
 FROM indicator_data ind_data WHERE ind_data.status=4 ORDER BY ind_idx,source_idx)tempy ON tempx.ind_id = tempy.ind_idx 
