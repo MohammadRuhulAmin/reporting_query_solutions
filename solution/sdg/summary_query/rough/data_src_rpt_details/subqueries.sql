@@ -42,7 +42,7 @@ FROM ind_definitions WHERE base_data_period <> 0000)temp3;
 
 #SELECT * FROM indicator_data WHERE ind_id = 123 AND source_id IN(63,82,187) AND STATUS = 4;
 
-SELECT sid.indicator_number,ids.ind_id,GROUP_CONCAT(temp0.ind_src_id) src_lst ,temp0.office_agency_id,temp0.agency
+SELECT sid.indicator_number,ids.ind_id,GROUP_CONCAT(distinct temp0.ind_src_id) src_lst ,temp0.office_agency_id,temp0.agency
 FROM(SELECT ind_sources.id ind_src_id, office_agency_id,office_agencies.name agency FROM ind_sources 
 LEFT JOIN office_agencies ON office_agencies.id = ind_sources.office_agency_id 
 WHERE office_agency_id > 0 #GROUP BY office_agency_id
