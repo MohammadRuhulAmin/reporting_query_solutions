@@ -106,10 +106,11 @@ FROM
 ,agency_info.office_agency_id,agency_info.agency,calculated_info.deadline
 FROM(SELECT tempx.*,tempy.*,tempz.last_entry_date, CONCAT(tempx.next_report_year+1,"-",tempz.last_entry_date) deadline 
 FROM(SELECT ind_id,source_id,next_report_year FROM data_update_status 
-WHERE  next_report_year <=YEAR(NOW()) ORDER BY ind_id,source_id)tempx
+WHERE  next_report_year < YEAR(NOW()) ORDER BY ind_id,source_id)tempx # <= condition 
 LEFT JOIN
 (SELECT ind_data.ind_id ind_idx,ind_data.source_id source_idx,ind_data.data_period 
-FROM indicator_data ind_data WHERE ind_data.status=4 ORDER BY ind_idx,source_idx)tempy ON tempx.ind_id = tempy.ind_idx 
+FROM indicator_data ind_data WHERE ind_data.status= 4 
+ORDER BY ind_idx,source_idx)tempy ON tempx.ind_id = tempy.ind_idx 
 AND tempx.source_id = tempy.source_idx AND tempx.next_report_year = tempy.data_period
 LEFT JOIN
 (SELECT ind_def.ind_id,DATE_FORMAT(ind_def.last_entry_date,"%m-%d")last_entry_date FROM ind_definitions ind_def)tempz
@@ -131,8 +132,6 @@ SELECT ind_sources.id, survey_id,ind_data_source_survey.name FROM ind_sources
 LEFT JOIN ind_data_source_survey ON ind_data_source_survey.id = ind_sources.survey_id 
 WHERE office_agency_id = 0 AND ministry_division_id = 0 AND ministry_id =0 AND survey_id >0)agency_info
 ON agency_info.ind_src_id = calculated_info.source_id
-WHERE calculated_info.ind_id = 123 
+WHERE calculated_info.ind_id = 19
 ORDER BY agency_info.office_agency_id)temp0
 GROUP BY temp0.office_agency_id)temp1;
-
-
