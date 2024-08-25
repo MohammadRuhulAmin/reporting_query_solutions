@@ -21,7 +21,7 @@ LEFT JOIN sdg_indicator_details sid ON sid.indicator_id = ids.ind_id AND sid.lan
 WHERE ids.ind_id IS NOT NULL)temp1
 LEFT JOIN 
 (SELECT si.id sdg_indicators_idx,MAX(ind.data_period) last_reporting_year FROM sdg_indicators si
-LEFT JOIN indicator_data ind ON ind.ind_id = si.id
+LEFT JOIN indicator_data ind ON ind.ind_id = si.id and ind.status = 4
 GROUP BY si.id)temp2 ON temp2.sdg_indicators_idx = temp1.sdg_indicators_id)temp3
 LEFT JOIN 
 (SELECT ind_id,base_data_period,data_frequency_year, 
