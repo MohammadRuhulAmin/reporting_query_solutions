@@ -1,4 +1,17 @@
-SELECT sid.indicator_number,parent_ind_info.*,temp_ind_wise_result.* 
+SELECT sid.indicator_number,sq2.nlist,sq2.p_ind_id,sq2.source_list,
+CASE WHEN sq2.total_updated = sq2.parent_records THEN "updated"
+WHEN sq2.total_not_updated = "not updated" THEN "not updated"
+ELSE "no data" END AS data_status,
+sq2.due_data_list
+ FROM(SELECT GROUP_CONCAT(sq1.indicator_number) nlist ,GROUP_CONCAT(sq1.ind_id)ind_idlist,
+sq1.p_ind_id, GROUP_CONCAT(DISTINCT CONCAT(sq1.indicator_number,"(",sq1.source_id_list,")" )) source_list,
+GROUP_CONCAT(DISTINCT CONCAT(sq1.indicator_number,"(",sq1.due_data,")" )) due_data_list,
+SUM(CASE WHEN sq1.data_status = "updated" THEN 1 ELSE 0 END) AS total_updated,
+SUM(CASE WHEN sq1.data_status = "not updated" THEN 1 ELSE 0 END) AS total_not_updated,
+SUM(CASE WHEN sq1.data_status = "has no base line" THEN 1 ELSE 0 END) AS total_no_base_line,
+COUNT(sq1.p_ind_id) parent_records
+FROM(SELECT sid.indicator_number,
+parent_ind_info.p_ind_id,parent_ind_info.source_id,temp_ind_wise_result.* 
 FROM(SELECT temp1.ind_id,temp1.source_id_list,CASE WHEN temp1.curr_report_year = temp1.max_data_period THEN "updated"
 WHEN temp1.total_next_report_year <> temp1.missing_data_year  THEN "not updated"
 WHEN temp1.total_next_report_year = temp1.missing_data_year  THEN "has no base line"
@@ -75,12 +88,13 @@ LEFT JOIN
 (SELECT si.id ind_id ,si.parent_indicator_id p_ind_id,ids.source_id FROM sdg_indicators si 
 LEFT JOIN ind_def_sources ids ON ids.ind_id = si.id
 WHERE si.parent_indicator_id > 0)parent_ind_info ON parent_ind_info.ind_id = temp_ind_wise_result.ind_id
-LEFT JOIN sdg_indicator_details sid ON sid.indicator_id = parent_ind_info.ind_id 
-WHERE sid.language_id = 1
-GROUP BY parent_ind_info.ind_id;
-
+LEFT JOIN sdg_indicator_details sid ON sid.indicator_id = parent_ind_info.ind_id  WHERE sid.language_id = 1
+GROUP BY parent_ind_info.ind_id)sq1
+GROUP BY sq1.p_ind_id)sq2
+LEFT JOIN sdg_indicator_details sid ON sid.indicator_id = sq2.p_ind_id 
+WHERE sid.language_id = 1;
 
 
 SELECT  si.id ind_id ,si.parent_indicator_id p_ind_id,ids.source_id FROM sdg_indicators si 
 LEFT JOIN ind_def_sources ids ON ids.ind_id = si.id
-WHERE si.parent_indicator_id > 0 ;
+WHERE si.parent_indicator_id > 0;
