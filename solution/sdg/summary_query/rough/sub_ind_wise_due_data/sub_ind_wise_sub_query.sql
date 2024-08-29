@@ -1,6 +1,6 @@
 SELECT sid.indicator_number,sq2.nlist,sq2.p_ind_id,sq2.source_list,
 CASE WHEN sq2.total_updated = sq2.parent_records THEN "updated"
-WHEN sq2.total_not_updated = "not updated" THEN "not updated"
+WHEN sq2.total_not_updated = sq2.parent_records THEN "not updated"
 ELSE "no data" END AS data_status,
 sq2.due_data_list
  FROM(SELECT GROUP_CONCAT(sq1.indicator_number) nlist ,GROUP_CONCAT(sq1.ind_id)ind_idlist,
