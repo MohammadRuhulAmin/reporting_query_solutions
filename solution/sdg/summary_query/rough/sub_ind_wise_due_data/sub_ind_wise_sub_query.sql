@@ -3,7 +3,7 @@ CASE WHEN sq2.total_updated = sq2.parent_records THEN "updated"
 WHEN sq2.total_no_base_line = sq2.parent_records THEN "no data"
 ELSE "not updated" END AS data_status,
 sq2.due_data_list
- FROM(SELECT GROUP_CONCAT(sq1.indicator_number) nlist ,GROUP_CONCAT(sq1.ind_id)ind_idlist,
+FROM(SELECT GROUP_CONCAT(sq1.indicator_number) nlist ,GROUP_CONCAT(sq1.ind_id)ind_idlist,
 sq1.p_ind_id, GROUP_CONCAT(DISTINCT CONCAT(sq1.indicator_number,"(",sq1.source_id_list,")" )) source_list,
 GROUP_CONCAT(DISTINCT CONCAT(sq1.indicator_number,"(",sq1.due_data,")" )) due_data_list,
 SUM(CASE WHEN sq1.data_status = "updated" THEN 1 ELSE 0 END) AS total_updated,
