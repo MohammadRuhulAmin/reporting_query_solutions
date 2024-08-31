@@ -7,7 +7,7 @@ SUM(CASE WHEN sq1.data_status = "updated" THEN 1 ELSE 0 END) total_updated,
 SUM(CASE WHEN sq1.data_status = "not updated" THEN 1 ELSE 0 END) total_not_update,
 SUM(CASE WHEN sq1.data_status = "has no base line" THEN 1 ELSE 0 END) total_no_base_line,
 COUNT(sq1.prnt_indicator_number) total_records,
-GROUP_CONCAT(CONCAT(sq1.indicator_number , "(",sq1.source_id),")") due_data
+GROUP_CONCAT(CONCAT(sq1.indicator_number , "(",sq1.due_data),")") due_data
 FROM(SELECT sid2.indicator_number prnt_indicator_number,pind_info.parent_indicator_id,temp1.ind_id,sid.indicator_number,tbl_agency.agency,#ind_src.name,
 temp1.source_id,
 CASE WHEN temp1.curr_report_year = temp1.max_data_period THEN "updated"
