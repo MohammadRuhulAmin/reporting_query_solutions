@@ -1,3 +1,10 @@
+# Step 1: Get the application id   
+SELECT id FROM applications WHERE jomi_division_id <> 1 ORDER BY id LIMIT 1;
+
+# Step 2: START TRANSACTION;
+
+# Step 3: Set application id to delete all the data from child tables 
+
 DELETE application_citizens, application_citizens_history, application_citizens_others,
 application_desk_info, application_documents, application_documents_child,
 application_draft_otp, application_land_schedule_doc_info, application_land_schedules,
@@ -66,4 +73,13 @@ JOIN sonali_payment_responses ON sonali_payment_responses.application_id = appli
 JOIN sunani_required_documents ON sunani_required_documents.application_id = applications.id
 JOIN validated_sub_reg_dolil_data ON validated_sub_reg_dolil_data.application_id = applications.id
 JOIN land_info_cloud_ref ON land_info_cloud_ref.application_id = applications.id
-WHERE applications.jomi_division_id <> 1 AND applications.id = 1;
+WHERE applications.jomi_division_id <> 1 AND applications.id = ${id};
+
+
+#Step 4: Delete the record from application table. 
+#example added 
+
+
+DELETE FROM applications WHERE id = ${id} AND jomi_division_id <> 1;
+
+#Step 5: COMMIT;
