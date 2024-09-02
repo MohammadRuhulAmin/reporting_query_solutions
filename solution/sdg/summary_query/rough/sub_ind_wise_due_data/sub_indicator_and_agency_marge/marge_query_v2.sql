@@ -164,4 +164,5 @@ WHERE office_agency_id = 0 AND ministry_division_id = 0 AND ministry_id =0 AND s
 ON temp0.ind_src_id = ids.source_id)temp1
 LEFT JOIN sdg_indicator_details sid ON sid.indicator_id = temp1.ind_id AND sid.language_id = 1
 GROUP BY temp1.office_agency_id,temp1.ind_id)temp2
-WHERE LENGTH(temp2.source_list) - LENGTH(REPLACE(temp2.source_list, ',', '')) > 0);
+WHERE LENGTH(temp2.source_list) - LENGTH(REPLACE(temp2.source_list, ',', '')) > 0)
+AND prnt_indicator_number NOT IN("4.1.1");
