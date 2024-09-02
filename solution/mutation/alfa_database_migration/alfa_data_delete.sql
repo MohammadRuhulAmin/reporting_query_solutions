@@ -13,12 +13,11 @@ application_reports, case_notices, case_orders, case_proposal_document_status,
 case_proposal_ext, case_proposal_missing_infos, case_proposal_tofsil_status, 
 case_proposals, case_status_updates, chalan_payment_responses, 
 citizen_other_documents, dashboard_reporting_raw, dashboard_reporting_raw_log, 
-dcr, desk_sla_info, khotian_batil, khotian_comments, khotian_history, khotians, 
+dcr, desk_sla_info, khotian_batil, khotian_history, khotians, 
 khotians_other_info, ld_tax_khotian_update_history, namonjur_order_application, 
 namonjur_reopen_info, payment_chalan_hist, payments, payments_hist, 
-proposal_missing_infos, reason_given_by_desk_user, receive_khotian_info, 
-payment_log, reconsideration_requests, reconsideration_requests_attachments, 
-#reconsideration_requests_comments, 
+proposal_missing_infos, reason_given_by_desk_user, 
+payment_log, reconsideration_requests, reconsideration_requests_attachments,
 short_fall_order, short_fall_order_second_gen, 
 sonali_payment_responses, sunani_required_documents, validated_sub_reg_dolil_data, 
 land_info_cloud_ref
@@ -48,10 +47,9 @@ LEFT JOIN chalan_payment_responses ON chalan_payment_responses.application_id = 
 LEFT JOIN citizen_other_documents ON citizen_other_documents.application_id = applications.id
 LEFT JOIN dashboard_reporting_raw ON dashboard_reporting_raw.application_id = applications.id
 LEFT JOIN dashboard_reporting_raw_log ON dashboard_reporting_raw_log.application_id = applications.id
-LEFT JOIN dcr ON dcr.application_id = applications.application_id
+LEFT JOIN dcr ON dcr.application_id = applications.id
 LEFT JOIN desk_sla_info ON desk_sla_info.application_id = applications.id
 LEFT JOIN khotian_batil ON khotian_batil.application_id = applications.id
-LEFT JOIN khotian_comments ON khotian_comments.application_id = applications.id
 LEFT JOIN khotian_history ON khotian_history.application_id = applications.id
 LEFT JOIN khotians ON khotians.application_id = applications.id
 LEFT JOIN khotians_other_info ON khotians_other_info.application_id = applications.id
@@ -63,11 +61,9 @@ LEFT JOIN payments ON payments.application_id = applications.id
 LEFT JOIN payments_hist ON payments_hist.application_id = applications.id
 LEFT JOIN proposal_missing_infos ON proposal_missing_infos.application_id = applications.id
 LEFT JOIN reason_given_by_desk_user ON reason_given_by_desk_user.application_id = applications.id
-LEFT JOIN receive_khotian_info ON receive_khotian_info.application_id = applications.id
 LEFT JOIN payment_log ON payment_log.application_id = applications.id
 LEFT JOIN reconsideration_requests ON reconsideration_requests.application_id = applications.id
 LEFT JOIN reconsideration_requests_attachments ON reconsideration_requests_attachments.application_id = applications.id
-# LEFT JOIN reconsideration_requests_comments ON reconsideration_requests_comments.application_id = applications.id
 LEFT JOIN short_fall_order ON short_fall_order.application_id = applications.id
 LEFT JOIN short_fall_order_second_gen ON short_fall_order_second_gen.application_id = applications.id
 LEFT JOIN sonali_payment_responses ON sonali_payment_responses.application_id = applications.id
