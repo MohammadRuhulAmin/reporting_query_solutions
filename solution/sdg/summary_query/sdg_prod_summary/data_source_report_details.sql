@@ -7,13 +7,13 @@ ELSE "not updated" END AS data_status,sq2.due_data FROM
 (SELECT sq1.prnt_indicator_number,sq1.indicator_id,sq1.agency,GROUP_CONCAT( CONCAT(sq1.indicator_number , "(",sq1.source_id),")") source_list,
 SUM(CASE WHEN sq1.data_status = "updated" THEN 1 ELSE 0 END) total_updated,
 SUM(CASE WHEN sq1.data_status = "not updated" THEN 1 ELSE 0 END) total_not_update,
-SUM(CASE WHEN sq1.data_status = "has no base line" THEN 1 ELSE 0 END) total_no_base_line,
+SUM(CASE WHEN sq1.data_status = "no data" THEN 1 ELSE 0 END) total_no_base_line,
 COUNT(sq1.prnt_indicator_number) total_records,
 GROUP_CONCAT(CONCAT(sq1.indicator_number , "(",sq1.due_data),")") due_data
 FROM(SELECT sid2.indicator_number prnt_indicator_number,sid2.indicator_id,tbl_agency.agency, pind_info.parent_indicator_id,sid.indicator_number,
 temp1.ind_id,temp1.source_id,CASE WHEN temp1.curr_report_year = temp1.max_data_period THEN "updated"
 WHEN temp1.total_next_report_year <> temp1.missing_data_year  THEN "not updated"
-WHEN temp1.total_next_report_year = temp1.missing_data_year  THEN "has no base line"
+WHEN temp1.total_next_report_year = temp1.missing_data_year  THEN "no data"
 END AS data_status,temp1.missing_data_year_list due_data
 FROM(SELECT temp0.ind_id,temp0.source_id, MAX(temp0.next_report_year)curr_report_year,MAX(temp0.data_period) max_data_period,
 GROUP_CONCAT(DISTINCT CASE WHEN temp0.year_status = 0 AND temp0.max_deadline < NOW() THEN temp0.next_report_year END )AS missing_data_year_list,
@@ -94,14 +94,14 @@ ELSE "not updated" END AS data_status,sq2.due_data   FROM
 (SELECT sq1.prnt_indicator_number,sq1.indicator_id,sq1.agency,GROUP_CONCAT( CONCAT(sq1.indicator_number , "(",sq1.source_id),")") source_list,
 SUM(CASE WHEN sq1.data_status = "updated" THEN 1 ELSE 0 END) total_updated,
 SUM(CASE WHEN sq1.data_status = "not updated" THEN 1 ELSE 0 END) total_not_update,
-SUM(CASE WHEN sq1.data_status = "has no base line" THEN 1 ELSE 0 END) total_no_base_line,
+SUM(CASE WHEN sq1.data_status = "no data" THEN 1 ELSE 0 END) total_no_base_line,
 COUNT(sq1.prnt_indicator_number) total_records,
 GROUP_CONCAT(CONCAT(sq1.indicator_number , "(",sq1.due_data),")") due_data
 FROM(SELECT sid2.indicator_number prnt_indicator_number,sid2.indicator_id,tbl_agency.agency, pind_info.parent_indicator_id,sid.indicator_number,
 #ind_src.name,
 temp1.ind_id,temp1.source_id,CASE WHEN temp1.curr_report_year = temp1.max_data_period THEN "updated"
 WHEN temp1.total_next_report_year <> temp1.missing_data_year  THEN "not updated"
-WHEN temp1.total_next_report_year = temp1.missing_data_year  THEN "has no base line"
+WHEN temp1.total_next_report_year = temp1.missing_data_year  THEN "no data"
 END AS data_status,temp1.missing_data_year_list due_data
 FROM(SELECT temp0.ind_id,temp0.source_id, MAX(temp0.next_report_year)curr_report_year,MAX(temp0.data_period) max_data_period,
 GROUP_CONCAT(DISTINCT CASE WHEN temp0.year_status = 0 AND temp0.max_deadline < NOW() THEN temp0.next_report_year END )AS missing_data_year_list,
@@ -179,7 +179,7 @@ UNION
 SELECT sid.indicator_number prnt_indicator_number,sid.indicator_id,
 temp1.agency,CASE WHEN temp1.curr_report_year = temp1.max_data_period THEN "updated"
 WHEN temp1.total_next_report_year <> temp1.missing_data_year  THEN "not updated"
-WHEN temp1.total_next_report_year = temp1.missing_data_year  THEN "has no base line"
+WHEN temp1.total_next_report_year = temp1.missing_data_year  THEN "no data"
 END AS data_status,temp1.missing_data_year_list due_data
 FROM 
 (SELECT temp0.ind_id,temp0.agency,GROUP_CONCAT(DISTINCT temp0.source_id) source_id_list,
