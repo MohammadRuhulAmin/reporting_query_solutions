@@ -16,3 +16,7 @@ LEFT JOIN pre_reg_refund_details d ON p.id=d.pilgrim_id AND p.tracking_no=d.trac
 WHERE p.is_archived=0 AND p.is_registrable=0 AND p.deleted='0'
 AND p.is_imported=0 AND p.payment_status=12 AND p.reg_payment_status=0
 AND p.pilgrim_listing_id=0 AND d.tracking_no IS NULL;
+
+STEP4:
+UPDATE pilgrims SET pilgrim_listing_id = ${govt_pilgrim_listing_id} WHERE id = ${pilgrim_id} AND  is_govt = "Government";
+UPDATE pilgrims SET pilgrim_listing_id = ${govt_pilgrim_listing_id} WHERE id = ${pilgrim_id} AND  is_govt = "Private";
