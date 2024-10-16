@@ -1,5 +1,4 @@
-
-select tbl_agency.office_agency_id,tempn.* from(SELECT parcentage.agency,FORMAT((100/parcentage.total_indicator)*parcentage.total_updated,2) total_update_parcent, parcentage.total_updated,
+SELECT tbl_agency.office_agency_id,tempn.* FROM(SELECT parcentage.agency,FORMAT((100/parcentage.total_indicator)*parcentage.total_updated,2) total_update_parcent, parcentage.total_updated,
 FORMAT((100/parcentage.total_indicator)*parcentage.total_not_updated,2) total_not_update_parcent,parcentage.total_not_updated,
 FORMAT((100/parcentage.total_indicator)*parcentage.total_no_base_line,2) total_no_base_line_parcent,parcentage.total_no_base_line,
 parcentage.total_indicator_parcent,
@@ -308,6 +307,10 @@ UNION  ALL
 SELECT ind_sources.id, survey_id,ind_data_source_survey.name FROM ind_sources 
 LEFT JOIN ind_data_source_survey ON ind_data_source_survey.id = ind_sources.survey_id 
 WHERE office_agency_id = 0 AND ministry_division_id = 0 AND ministry_id =0 AND survey_id >0)tbl_agency
-on tbl_agency.agency = tempn.agency 
+ON tbl_agency.agency = tempn.agency 
 
-where 1 = 1
+WHERE 1 = 1
+AND tbl_agency. office_agency_id = 293
+
+GROUP BY tbl_agency.office_agency_id,tempn.agency,tempn.total_update_parcent,tempn.total_updated,tempn.total_not_update_parcent,tempn.total_not_updated,
+tempn.total_no_base_line_parcent,tempn.total_no_base_line,tempn.total_indicator_parcent,tempn.total_indicator;
