@@ -6,15 +6,15 @@ DELIMITER //
 
 CREATE PROCEDURE challan_data_migration_procedure()
 BEGIN
-    DECLARE s_challan_id INT;
-    DECLARE s_division_id INT;
-    DECLARE s_application_id INT;
+    DECLARE s_challan_id BIGINT;
+    DECLARE s_division_id BIGINT;
+    DECLARE s_application_id BIGINT;
     DECLARE s_payment_by VARCHAR(255);
     DECLARE s_is_wallet VARCHAR(3);
     DECLARE s_client_unique_id VARCHAR(255);
-    DECLARE s_trns_req_id INT;
-    DECLARE s_payment_id INT;
-    DECLARE s_tkm_id INT;
+    DECLARE s_trns_req_id VARCHAR(255);
+    DECLARE s_payment_id BIGINT;
+    DECLARE s_tkm_id BIGINT;
 
     -- Declare a handler for errors
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -52,6 +52,9 @@ BEGIN
     INSERT INTO pg_service_rnd.challan_log 
     SELECT * FROM pg_service.challan_log WHERE challan_id = s_challan_id;
 
+    INSERT INTO pg_service_rnd.pg_payments
+    SELECT * FROM pg_service.pg_payments 
+    WHERE client_unique_id = CONCAT('055#', s_client_unique_id);
     -- Handle wallet or non-wallet payments
     IF s_is_wallet = 'Yes' THEN
         -- Insert into wallet payment log
@@ -61,9 +64,7 @@ BEGIN
 
     ELSE
         -- Non-wallet payment handling
-        INSERT INTO pg_service_rnd.pg_payments
-        SELECT * FROM pg_service.pg_payments 
-        WHERE client_unique_id = CONCAT('055#', s_client_unique_id);
+        
 
         -- Get the payment ID
         SELECT p.id INTO s_payment_id 
