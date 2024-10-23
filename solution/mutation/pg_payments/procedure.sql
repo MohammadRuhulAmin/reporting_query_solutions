@@ -1,6 +1,10 @@
+#For checking autocommit status 
+#SHOW VARIABLES WHERE Variable_name='autocommit'; SELECT @@autocommit;
+
+
 DELIMITER //
 
-CREATE PROCEDURE processChallanData()
+CREATE PROCEDURE challan_data_migration_procedure()
 BEGIN
     DECLARE s_challan_id INT;
     DECLARE s_division_id INT;
