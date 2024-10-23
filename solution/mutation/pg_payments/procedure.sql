@@ -17,7 +17,7 @@ BEGIN
     DECLARE s_tkm_id INT;
 
     -- Declare a handler for errors
-    DECLARE CONTINUE HANDLER FOR SQLEXCEPTION
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         -- Rollback the transaction on error
         ROLLBACK;
