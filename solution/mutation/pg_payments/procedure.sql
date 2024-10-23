@@ -42,6 +42,7 @@ BEGIN
     ORDER BY c.id 
     LIMIT 1;
 
+    
     -- Insert data into pg_service_rnd tables
     INSERT INTO pg_service_rnd.challan 
     SELECT * FROM pg_service.challan WHERE id = s_challan_id;
@@ -53,19 +54,19 @@ BEGIN
     SELECT * FROM pg_service.challan_log WHERE challan_id = s_challan_id;
 
     INSERT INTO pg_service_rnd.pg_payments
-    SELECT * FROM pg_service.pg_payments 
-    WHERE client_unique_id = CONCAT('055#', s_client_unique_id);
+    SELECT * FROM pg_service.pg_payments WHERE client_unique_id = CONCAT('055#', s_client_unique_id);
+
+    
     -- Handle wallet or non-wallet payments
     IF s_is_wallet = 'Yes' THEN
         -- Insert into wallet payment log
         INSERT INTO pg_service_rnd.pg_wallet_payment_log
         SELECT * FROM pg_wallet_payment_log 
-        WHERE division_id = s_division_id AND application_id = s_application_id;
+        WHERE division_id = s_division_id 
+        AND application_id = s_application_id;
 
     ELSE
         -- Non-wallet payment handling
-        
-
         -- Get the payment ID
         SELECT p.id INTO s_payment_id 
         FROM pg_service.pg_payments p 
@@ -86,7 +87,8 @@ BEGIN
         FROM transaction_key_mapping WHERE payment_id = s_payment_id;
 
         INSERT INTO pg_service_rnd.transaction_key_mapping_history 
-        SELECT * FROM transaction_key_mapping_history WHERE trans_key_mapping_id = s_tkm_id;
+        SELECT * FROM transaction_key_mapping_history 
+        WHERE trans_key_mapping_id = s_tkm_id;
     END IF;
 
     -- Commit the transaction
