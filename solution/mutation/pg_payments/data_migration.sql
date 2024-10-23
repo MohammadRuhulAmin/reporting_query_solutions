@@ -29,7 +29,7 @@ ELSE
 	
 	#get the transaction key mapping id
 	SELECT tkm.id INTO @tkm_id FROM transaction_key_mapping tkm WHERE tkm.payment_id=@payment_id;
-	SELECT * FROM transaction_key_mapping_history tkmh WHERE tkmh.trans_key_mapping_id=@tkm.id;
+	SELECT * FROM transaction_key_mapping_history tkmh WHERE tkmh.trans_key_mapping_id=@tkm_id;
 	
 
 END IF;
