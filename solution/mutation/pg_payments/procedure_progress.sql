@@ -19,6 +19,7 @@ BEGIN
         GET DIAGNOSTICS CONDITION 1 error_message = MESSAGE_TEXT;
         ROLLBACK;
         SELECT error_message, CONCAT(" challan_id : ",s_challan_id) challan_info;
+        INSERT INTO pg_service_rnd.challan_unsuccess_log(challan_id)VALUES(s_challan_id);
     END;
     SET autocommit = 0;
     START TRANSACTION;
@@ -34,7 +35,7 @@ BEGIN
     FROM pg_service.challan c
     WHERE c.id > (SELECT IFNULL(MAX(id), 0) FROM pg_service_rnd.challan)
       AND c.challan_generation_status = 1 
-      AND c.transaction_date < CURDATE()
+      AND c.transaction_date < CURDATE() AND c.id NOT IN (SELECT DISTINCT challan_id FROM pg_service_rnd.`challan_unsuccess_log`)
     ORDER BY c.id 
     LIMIT 1;
 
@@ -51,7 +52,7 @@ BEGIN
         
         SELECT GROUP_CONCAT(id) INTO s_tkm_id_list FROM pg_service.transaction_key_mapping WHERE payment_id = s_payment_id;
 	INSERT INTO pg_service_rnd.transaction_key_mapping_history SELECT * FROM pg_service.transaction_key_mapping_history
-	WHERE trans_key_mapping_id IN (s_tkm_id_list);
+	WHERE trans_key_mapping_id IN (SELECT REPLACE(s_tkm_id_list, "'",""));
 	
     ELSE
         INSERT INTO pg_service_rnd.pg_wallet_payment_log SELECT * FROM pg_service.pg_wallet_payment_log WHERE division_id = s_division_id AND application_id = s_application_id;
