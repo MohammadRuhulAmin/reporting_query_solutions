@@ -18,8 +18,10 @@ BEGIN
     BEGIN
         GET DIAGNOSTICS CONDITION 1 error_message = MESSAGE_TEXT;
         ROLLBACK;
-        SELECT error_message, CONCAT(" challan_id : ",s_challan_id) challan_info;
-        INSERT INTO pg_service_rnd.challan_unsuccess_log(challan_id,`status`)VALUES(s_challan_id,-1);
+        INSERT INTO `pg_service_rnd`.`challan_unsuccess_log`(challan_id, application_id, payment_by, is_wallet, client_unique_id, trans_req_id,error_message,`status`)
+	VALUES (s_challan_id,s_application_id,s_payment_by,s_is_wallet,s_client_unique_id,s_trns_req_id,error_message,-1);
+	SELECT error_message, CONCAT(" challan_id : ",s_challan_id) challan_info;
+
     END;
     SET autocommit = 0;
     START TRANSACTION;
