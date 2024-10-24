@@ -44,7 +44,7 @@ BEGIN
     INSERT INTO pg_service_rnd.pg_payments SELECT * FROM pg_service.pg_payments WHERE client_unique_id = CONCAT('055#',s_client_unique_id);
     
     IF s_is_wallet ='No' THEN
-        SELECT p.id INTO s_payment_id FROM pg_service.pg_payments p WHERE p.client_unique_id = CONCAT('055#', s_client_unique_id);
+        SELECT p.id INTO s_payment_id FROM pg_service.pg_payments p WHERE p.transaction_id = s_trns_req_id AND p.client_unique_id = CONCAT('055#', s_client_unique_id);
         INSERT INTO pg_service_rnd.pg_payment_log SELECT * FROM pg_service.pg_payment_log WHERE payment_id = s_payment_id;
 	INSERT INTO pg_service_rnd.pg_payments_history SELECT * FROM pg_service.pg_payments_history WHERE pg_payments_id = s_payment_id;
         INSERT INTO pg_service_rnd.`transaction_key_mapping` SELECT * FROM pg_service.`transaction_key_mapping` WHERE payment_id = s_payment_id;
