@@ -18,7 +18,7 @@ BEGIN
     BEGIN
         GET DIAGNOSTICS CONDITION 1 error_message = MESSAGE_TEXT;
         ROLLBACK;
-        SELECT (error_message);
+        SELECT error_message, CONCAT(" challan_id : ",s_challan_id) challan_info;
     END;
     SET autocommit = 0;
     START TRANSACTION;
@@ -60,6 +60,7 @@ BEGIN
     
     COMMIT;
     SET autocommit = 1;
+    SELECT CONCAT("data migration successful for challan_id :",s_challan_id) success_message;
 END //
 
 DELIMITER ;
