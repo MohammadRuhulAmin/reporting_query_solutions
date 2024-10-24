@@ -19,7 +19,7 @@ BEGIN
         GET DIAGNOSTICS CONDITION 1 error_message = MESSAGE_TEXT;
         ROLLBACK;
         SELECT error_message, CONCAT(" challan_id : ",s_challan_id) challan_info;
-        INSERT INTO pg_service_rnd.challan_unsuccess_log(challan_id)VALUES(s_challan_id);
+        INSERT INTO pg_service_rnd.challan_unsuccess_log(challan_id,`status`)VALUES(s_challan_id,-1);
     END;
     SET autocommit = 0;
     START TRANSACTION;
