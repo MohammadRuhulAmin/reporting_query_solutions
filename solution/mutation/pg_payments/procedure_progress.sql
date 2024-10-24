@@ -11,6 +11,7 @@ BEGIN
     DECLARE s_trns_req_id VARCHAR(255);
     DECLARE s_payment_id BIGINT;
     DECLARE s_tkm_id BIGINT;
+    DECLARE s_tkmh_count BIGINT;
 
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -39,6 +40,20 @@ BEGIN
     INSERT INTO pg_service_rnd.challan_history SELECT * FROM pg_service.challan_history WHERE challan_id = s_challan_id;
     INSERT INTO pg_service_rnd.challan_log SELECT * FROM pg_service.challan_log WHERE challan_id = s_challan_id;
     INSERT INTO pg_service_rnd.pg_payments SELECT * FROM pg_service.pg_payments WHERE client_unique_id = CONCAT('055#',s_client_unique_id);
+    
+    IF s_is_wallet ='No' THEN
+        SELECT p.id INTO s_payment_id FROM pg_service.pg_payments p WHERE p.client_unique_id = CONCAT('055#', s_client_unique_id);
+        INSERT INTO pg_service_rnd.pg_payment_log SELECT * FROM pg_service.pg_payment_log WHERE payment_id = s_payment_id;
+	INSERT INTO pg_service_rnd.pg_payments_history SELECT * FROM pg_service.pg_payments_history WHERE pg_payments_id = s_payment_id;
+        INSERT INTO pg_service_rnd.`transaction_key_mapping` SELECT * FROM pg_service.`transaction_key_mapping` WHERE payment_id = s_payment_id;
+        #select tkm.id into s_tkm_id from pg_service.`transaction_key_mapping` where payment_id = s_payment_id;
+        #insert into pg_service_rnd.`transaction_key_mapping_history` select * from pg_service.transaction_key_mapping_history where trans_key_mapping_id = s_tkm_id;
+    
+    ELSE
+        INSERT INTO pg_service_rnd.pg_wallet_payment_log SELECT * FROM pg_service.pg_wallet_payment_log 
+        WHERE division_id = s_division_id AND application_id = s_application_id;
+        
+    END IF;
     
     COMMIT;
     SET autocommit = 1;
