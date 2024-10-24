@@ -12,11 +12,13 @@ BEGIN
     DECLARE s_payment_id BIGINT;
     DECLARE s_tkm_id BIGINT;
     DECLARE s_tkmh_count BIGINT;
+    DECLARE error_message TEXT;
 
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
+        GET DIAGNOSTICS CONDITION 1 error_message = MESSAGE_TEXT;
         ROLLBACK;
-        SELECT ("Error occured");
+        SELECT (error_message);
     END;
     SET autocommit = 0;
     START TRANSACTION;
@@ -46,8 +48,7 @@ BEGIN
         INSERT INTO pg_service_rnd.pg_payment_log SELECT * FROM pg_service.pg_payment_log WHERE payment_id = s_payment_id;
 	INSERT INTO pg_service_rnd.pg_payments_history SELECT * FROM pg_service.pg_payments_history WHERE pg_payments_id = s_payment_id;
         INSERT INTO pg_service_rnd.`transaction_key_mapping` SELECT * FROM pg_service.`transaction_key_mapping` WHERE payment_id = s_payment_id;
-        #select tkm.id into s_tkm_id from pg_service.`transaction_key_mapping` where payment_id = s_payment_id;
-        #insert into pg_service_rnd.`transaction_key_mapping_history` select * from pg_service.transaction_key_mapping_history where trans_key_mapping_id = s_tkm_id;
+        
     
     ELSE
         INSERT INTO pg_service_rnd.pg_wallet_payment_log SELECT * FROM pg_service.pg_wallet_payment_log 
