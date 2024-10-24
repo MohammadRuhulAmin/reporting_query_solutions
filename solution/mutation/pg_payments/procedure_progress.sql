@@ -10,7 +10,7 @@ BEGIN
     DECLARE s_client_unique_id VARCHAR(255);
     DECLARE s_trns_req_id VARCHAR(255);
     DECLARE s_payment_id BIGINT;
-    DECLARE s_tkm_id BIGINT;
+    DECLARE s_tkm_id_list VARCHAR(1000);
     DECLARE s_tkmh_count BIGINT;
     DECLARE error_message TEXT;
 
@@ -49,10 +49,12 @@ BEGIN
 	INSERT INTO pg_service_rnd.pg_payments_history SELECT * FROM pg_service.pg_payments_history WHERE pg_payments_id = s_payment_id;
         INSERT INTO pg_service_rnd.`transaction_key_mapping` SELECT * FROM pg_service.`transaction_key_mapping` WHERE payment_id = s_payment_id;
         
-    
+        SELECT GROUP_CONCAT(id) INTO s_tkm_id_list FROM pg_service.transaction_key_mapping WHERE payment_id = s_payment_id;
+	INSERT INTO pg_service_rnd.transaction_key_mapping_history SELECT * FROM pg_service.transaction_key_mapping_history
+	WHERE trans_key_mapping_id IN (s_tkm_id_list);
+	
     ELSE
-        INSERT INTO pg_service_rnd.pg_wallet_payment_log SELECT * FROM pg_service.pg_wallet_payment_log 
-        WHERE division_id = s_division_id AND application_id = s_application_id;
+        INSERT INTO pg_service_rnd.pg_wallet_payment_log SELECT * FROM pg_service.pg_wallet_payment_log WHERE division_id = s_division_id AND application_id = s_application_id;
         
     END IF;
     
