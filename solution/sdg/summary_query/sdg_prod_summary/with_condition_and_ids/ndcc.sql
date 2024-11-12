@@ -1,4 +1,4 @@
-SELECT tlp.*,sqnn.name ndcc_sub_committee,sqnn.ndcc_committee_id FROM (SELECT sq1.ind_id indicator_id,sq4.target_id,sq4.goal_id,sq1.office_agency_id agency_id, #sql.source_id
+SELECT tlp.*,sqnn.name ndcc_sub_committee,sqnn.ndcc_committee_id FROM (SELECT sq1.ind_id indicator_id,sq4.target_id,sq4.order,sq4.goal_id,sq1.office_agency_id agency_id, #sql.source_id
 sq4.sdg_indicator,sq4.sequence_en tier_classification,sq1.institution,sq1.activity,
 sq4.reporting_frequency,sq2.b_year,sq2.data_value_b,
 sq3.c_year,sq3.data_value_c,sq5.min_disagg_dimention,sq6.formatted_date deadline 
@@ -45,8 +45,8 @@ ind_data.source_id = tmd.source_id AND
 ind_data.data_period = tmd.c_year 
 WHERE ind_data.data_value IS NOT NULL)sq3 ON sq3.ind_id = sq1.ind_id AND sq3.source_id = sq1.source_id
 
-LEFT JOIN 
-(SELECT si.id ind_id,si.target_id,si.goal_id,CONCAT(sid.indicator_number,' ',sid.short_title) sdg_indicator,
+INNER JOIN 
+(SELECT si.id ind_id,si.order,si.target_id,si.goal_id,CONCAT(sid.indicator_number,' ',sid.short_title) sdg_indicator,
 ti.sequence_en, CASE WHEN id.data_frequency_year = 1 THEN "Annual" WHEN id.data_frequency_year = 2 THEN "Bi-annual"
 WHEN id.data_frequency_year = 3 THEN "Triennial" WHEN id.data_frequency_year = 4 THEN "Quadrennial"
 WHEN id.data_frequency_year = 5 THEN "Five-yearly" WHEN id.data_frequency_year = 10 THEN "Ten-yearly"
@@ -82,4 +82,5 @@ LEFT JOIN
 LEFT JOIN ndcc_committee nc ON nc.id = id.ndcc_committee_id)sqnn ON sqnn.ind_id =  tlp.indicator_id 
 
 
-WHERE 1=1;
+
+WHERE 1=1 ORDER BY tlp.goal_id,tlp.order;
