@@ -1,4 +1,4 @@
-SELECT sq1.ind_id indicator_id,sq4.target_id,sq4.goal_id,sq1.office_agency_id agency_id, #sql.source_id
+SELECT tlp.*,sqnn.name ndcc_sub_committee,sqnn.ndcc_committee_id FROM (SELECT sq1.ind_id indicator_id,sq4.target_id,sq4.goal_id,sq1.office_agency_id agency_id, #sql.source_id
 sq4.sdg_indicator,sq4.sequence_en tier_classification,sq1.institution,sq1.activity,
 sq4.reporting_frequency,sq2.b_year,sq2.data_value_b,
 sq3.c_year,sq3.data_value_c,sq5.min_disagg_dimention,sq6.formatted_date deadline 
@@ -75,5 +75,11 @@ WHEN DAY(DATE(ind_def.last_entry_date)) IN (2, 22) THEN CONCAT(DAY(DATE(ind_def.
 WHEN DAY(DATE(ind_def.last_entry_date)) IN (3, 23) THEN CONCAT(DAY(DATE(ind_def.last_entry_date)), 'rd')
 ELSE CONCAT(DAY(DATE(ind_def.last_entry_date)), 'th')
 END,", ",DATE_FORMAT(ind_def.last_entry_date, '%M')) AS formatted_date
-FROM ind_definitions ind_def GROUP BY ind_id,formatted_date)sq6 ON sq6.ind_id = sq1.ind_id
+FROM ind_definitions ind_def GROUP BY ind_id,formatted_date)sq6 ON sq6.ind_id = sq1.ind_id)tlp
+
+LEFT JOIN
+(SELECT nc.name,id.ndcc_committee_id, id.ind_id FROM ind_definitions id 
+LEFT JOIN ndcc_committee nc ON nc.id = id.ndcc_committee_id)sqnn ON sqnn.ind_id =  tlp.indicator_id 
+
+
 WHERE 1=1;
