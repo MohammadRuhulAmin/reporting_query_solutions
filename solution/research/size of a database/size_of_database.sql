@@ -17,3 +17,16 @@ WHERE
     TABLE_SCHEMA = 'prpdb_prod'
 ORDER BY 
     TABLE_NAME;
+
+# check if a column is exist of not in all tables of a database:
+
+SELECT t.table_name
+FROM information_schema.tables t
+WHERE t.table_schema = 'mutation_barisal'
+  AND t.table_name NOT IN (
+    SELECT DISTINCT TABLE_NAME
+    FROM information_schema.columns
+    WHERE table_schema = 'mutation_barisal'
+      AND COLUMN_NAME = 'division_id'
+  )
+  AND t.table_type = 'BASE TABLE';
