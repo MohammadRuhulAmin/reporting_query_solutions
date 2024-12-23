@@ -96,3 +96,11 @@ NOW(), #signature_date
 /*user_info*/,
 1, /*division_id*/
 );
+
+STEP 3.e: Update `applications` table. Column value information is given below
+
+UPDATE `mutation_barisal`.applications app SET 
+app.case_main_status_id = "{50 for Kanungo / 47 for Kanungo & Surveyor}",
+app.users_tagged_send` = ["4"],
+app.users_tagged_receive = (SELECT `users_tagged_receive` FROM `case_statuses` WHERE id = {50 for Kanungo / 47 for Kanungo & Surveyor}),
+app.users_tagged_view = (SELECT `users_tagged_view` FROM `case_statuses` WHERE id = {50 for Kanungo / 47 for Kanungo & Surveyor});
