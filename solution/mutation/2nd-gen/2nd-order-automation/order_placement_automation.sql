@@ -25,4 +25,23 @@ SELECT * FROM ulao_investigation_report_status uirs WHERE
 uirs.area_select_servyor_status = 1 AND uirs.monjur_status = 1;
 
 
+#STEP 3:To place an order, data need to be saved/updated in
 
+#STEP 3.a: Insert into `case_orders` table. Column value information is given below:
+
+INSERT INTO `mutation_barisal`.case_orders
+(user_id,designation_id,office_id,case_status_update_id,order_no,order_date,order_statement,is_forwarded,signature,signature_date,user_info,division_id)
+VALUES(
+(SELECT id FROM rsk.users WHERE office_id = ${applications.office_id}),#user_id
+(SELECT designation_id FROM rsk.users WHERE office_id = {applications.office_id} AND user_group_id = 4 AND idp_uuid IS NOT NULL),#designation_id
+${applications.office_id}, #office_id
+${case_status_updates.id}, #case_status_update_id
+2, #order_no
+NOW(), #order_date
+(SELECT `template` FROM `text_templates` WHERE id = (SELECT text_template_id FROM `case_statuses` WHERE id = {50 FOR Kanungo / 47 FOR Kanungo & Surveyor})), #order_statement
+1, #is_forwarded
+( SELECT signature FROM rsk.users WHERE office_id = {applications.office_id} AND user_group_id = 4 AND idp_uuid IS NOT NULL), #signature
+NOW(), #signature_date
+(/*probably apicall*/), #user_info
+1 /*current_division_id*/
+);
