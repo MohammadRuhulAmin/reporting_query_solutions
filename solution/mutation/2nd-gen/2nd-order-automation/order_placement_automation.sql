@@ -45,3 +45,54 @@ NOW(), #signature_date
 (/*probably apicall*/), #user_info
 1 /*current_division_id*/
 );
+
+#STEP 3.b: Insert into `case_status_updates` table. Column value information is given below:
+
+INSERT INTO `mutation_barisal`.case_status_updates
+(case_status_id,status_update_date,next_status_date,user_id,users_tagged_send,
+users_tagged_receive,users_tagged_view,case_order_id,is_locked,status_action_id,
+status_action_type, division_id
+)
+VALUES(
+"50 for Kanungo / 47 for Kanungo & Surveyor",#case_status_id
+NOW(),#status_update_date
+/*logic not added*/, #next_status_date
+(SELECT id FROM rsk.users WHERE office_id = {applications.office_id} AND user_group_id = 4 AND idp_uuid IS NOT NULL), #user_id
+( SELECT `users_tagged_send` FROM `case_statuses` WHERE id = {50 FOR Kanungo / 47 FOR Kanungo & Surveyor}), #users_tagged_send
+(SELECT `users_tagged_receive` FROM `case_statuses` WHERE id = {50 FOR Kanungo / 47 FOR Kanungo & Surveyor}),# users_tagged_receive
+(SELECT `users_tagged_view` FROM `case_statuses` WHERE id = {50 FOR Kanungo / 47 FOR Kanungo & Surveyor}) ,#users_tagged_view
+${case_order.id}, #case_order_id,
+1, #is_locked
+${case_orders.id}, #status_action_id
+"order",
+1, #current_division_id
+);
+
+
+#STEP 3.c: Insert into `case_status_updates_ext` table
+
+INSERT INTO mutation_barisal.case_status_updates_ext(sunani_type,division_id)
+VALUES(2,1)
+
+#STEP 3.d:Insert into `case_notices` table. Column value information is given below:
+
+INSERT INTO `mutation_barisal`.case_notices 
+(user_id,designation_id,office_id,`date`,memorandum_no,
+main_notice, is_locked,is_forwarded, signature,signature_date,`status`,badi,b_badi,user_info,division_id)
+VALUES(
+(SELECT id FROM rsk.users WHERE office_id = {applications.office_id} AND user_group_id = 4 AND idp_uuid IS NOT NULL), #user_id
+(SELECT designation_id FROM rsk.users WHERE office_id = {applications.office_id} AND user_group_id = 4 AND idp_uuid IS NOT NULL), #designation_id
+${applications.office_id},#office_id
+NOW(), #current date
+(SELECT COUNT(id)+1 FROM `case_notices` WHERE office_id = {applications.office_id}), #memorandum_no
+(SELECT `template` FROM `text_templates` WHERE id = 6; /*Template variable (dynamic value) will be replaced with*/),#main_notice
+1, #is_locked
+1, #is_forwarded
+(SELECT signature FROM rsk.users WHERE office_id = {applications.office_id} AND user_group_id = 4 AND idp_uuid IS NOT NULL), #signature
+NOW(), #signature_date
+1, #status
+/*badi*/,
+/*bibadi*/,
+/*user_info*/,
+1, /*division_id*/
+);
