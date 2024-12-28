@@ -8,6 +8,8 @@ SHOW VARIABLES LIKE 'event_scheduler';
 
 # Create an Event Scheduler:
 
+DELIMITER //
+
 CREATE EVENT insert_if_time_reached
 ON SCHEDULE EVERY 1 MINUTE
 DO
@@ -17,10 +19,12 @@ BEGIN
     FROM timed_inserts
     WHERE NOW() >= last_updated
   ) THEN
-    INSERT INTO timed_inserts (data, last_updated)
+    INSERT INTO timed_inserts (DATA, last_updated)
     VALUES ('New Timed Entry', NOW() + INTERVAL 1 MINUTE);
   END IF;
-END;
+END //
+
+DELIMITER ;
 
 # See the Events:
 SHOW EVENTS;
