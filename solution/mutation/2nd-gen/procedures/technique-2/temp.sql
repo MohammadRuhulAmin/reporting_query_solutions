@@ -132,22 +132,59 @@ BEGIN
     /*get badi information */
 
     (SELECT ac.id, ac.application_citizen_type_id, ac.if_main,
-CONCAT("নাম: ", IFNULL(ac.name, "")," ঠিকানা: ", IFNULL(ac.address, "")," মোবাইল নং: ", IFNULL(ac.mobile_no, "")) AS badi
-FROM application_citizens ac
-WHERE ac.application_id = 3271611
-AND ac.application_citizen_type_id = 1 AND ac.if_main = 1)
-UNION
-(SELECT ac.id, ac.application_citizen_type_id, ac.if_main,
-CONCAT("নাম: ", IFNULL(ac.name, "")," ঠিকানা: ", IFNULL(ac.address, ""), " মোবাইল নং: ", IFNULL(ac.mobile_no, "")) AS badi
-FROM application_citizens ac
-WHERE ac.application_id = 3271611
-AND ac.application_citizen_type_id = 1 
-AND ac.if_main = 0
-AND NOT EXISTS (SELECT 1 FROM application_citizens ac_sub WHERE ac_sub.application_id = 3271611
+    CONCAT("নাম: ", IFNULL(ac.name, "")," ঠিকানা: ", IFNULL(ac.address, "")," মোবাইল নং: ", IFNULL(ac.mobile_no, "")) AS badi
+    FROM application_citizens ac
+    WHERE ac.application_id = 3271611
+    AND ac.application_citizen_type_id = 1 AND ac.if_main = 1)
+    UNION
+    (SELECT ac.id, ac.application_citizen_type_id, ac.if_main,
+    CONCAT("নাম: ", IFNULL(ac.name, "")," ঠিকানা: ", IFNULL(ac.address, ""), " মোবাইল নং: ", IFNULL(ac.mobile_no, "")) AS badi
+    FROM application_citizens ac
+    WHERE ac.application_id = 3271611
+    AND ac.application_citizen_type_id = 1 
+    AND ac.if_main = 0
+    AND NOT EXISTS (SELECT 1 FROM application_citizens ac_sub WHERE ac_sub.application_id = 3271611
 AND ac_sub.application_citizen_type_id = 1 AND ac_sub.if_main = 1)
 );
 
+/*get bibadi information*/
 
+SELECT ac.id,ac.application_citizen_type_id,ac.if_main,
+CONCAT("নাম: ", IFNULL(ac.name, ""), " ঠিকানা: ", IFNULL(ac.address, ""), " মোবাইল নং: ", IFNULL(ac.mobile_no, "")) AS bibadi
+FROM application_citizens ac WHERE ac.application_id = 3271611
+  AND (
+      (ac.application_citizen_type_id = 4 AND ac.if_main = 1)
+      OR 
+      (ac.application_citizen_type_id = 4 AND ac.if_main = 0 AND NOT EXISTS (
+          SELECT 1 
+          FROM application_citizens ac_sub
+          WHERE ac_sub.application_id = 3271611
+            AND ac_sub.application_citizen_type_id = 4
+            AND ac_sub.if_main = 1
+      ))
+      OR
+      (ac.application_citizen_type_id = 2 AND ac.if_main = 1 AND NOT EXISTS (
+          SELECT 1 
+          FROM application_citizens ac_sub
+          WHERE ac_sub.application_id = 3271611
+            AND ac_sub.application_citizen_type_id = 4
+            AND ac_sub.if_main IN (1, 0)
+      ))
+      OR
+      (ac.application_citizen_type_id = 2 AND ac.if_main = 0 AND NOT EXISTS (
+          SELECT 1 
+          FROM application_citizens ac_sub
+          WHERE ac_sub.application_id = 3271611
+            AND ac_sub.application_citizen_type_id = 4
+            AND ac_sub.if_main IN (1, 0)
+      ) AND NOT EXISTS (
+          SELECT 1 
+          FROM application_citizens ac_sub
+          WHERE ac_sub.application_id = 3271611
+            AND ac_sub.application_citizen_type_id = 2
+            AND ac_sub.if_main = 1
+      ))
+  );
 
 
 
