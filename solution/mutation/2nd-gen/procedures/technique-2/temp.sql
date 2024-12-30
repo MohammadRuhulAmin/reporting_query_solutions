@@ -40,7 +40,7 @@ BEGIN
     ON DUPLICATE KEY UPDATE `status` = VALUES(`status`);
     
      
-    #step - 3.a,3.b 
+    #step - 3.a
     SELECT JSON_ARRAYAGG(soap.application_id) AS process_application_list INTO applications_application_id_list
     FROM second_order_automation_process soap WHERE soap.status = 1;
     SET array_length = JSON_LENGTH(applications_application_id_list);
@@ -75,7 +75,7 @@ BEGIN
 	DATE_FORMAT(CURDATE(), '%Y-%m-%d'),
 	
 	/*Get Nth working date*/	
-        SELECT tempx.today_date INTO nth_working_date FROM (
+  SELECT tempx.today_date INTO nth_working_date FROM (
 	SELECT temp.today_date, ROW_NUMBER() OVER () AS working_day_sl 
 	FROM (
 	WITH RECURSIVE next_days AS (
@@ -124,9 +124,33 @@ BEGIN
 	  AND u.office_id = 5 
 	  AND u.idp_uuid IS NOT NULL 
 	  AND u.status = 1)/*user info*/,
-	1
-	
-      )
+	  1
+    )
+
+    #step 3.b 
+    
+    /*get badi information */
+
+    (SELECT ac.id, ac.application_citizen_type_id, ac.if_main,
+CONCAT("নাম: ", IFNULL(ac.name, "")," ঠিকানা: ", IFNULL(ac.address, "")," মোবাইল নং: ", IFNULL(ac.mobile_no, "")) AS badi
+FROM application_citizens ac
+WHERE ac.application_id = 3271611
+AND ac.application_citizen_type_id = 1 AND ac.if_main = 1)
+UNION
+(SELECT ac.id, ac.application_citizen_type_id, ac.if_main,
+CONCAT("নাম: ", IFNULL(ac.name, "")," ঠিকানা: ", IFNULL(ac.address, ""), " মোবাইল নং: ", IFNULL(ac.mobile_no, "")) AS badi
+FROM application_citizens ac
+WHERE ac.application_id = 3271611
+AND ac.application_citizen_type_id = 1 
+AND ac.if_main = 0
+AND NOT EXISTS (SELECT 1 FROM application_citizens ac_sub WHERE ac_sub.application_id = 3271611
+AND ac_sub.application_citizen_type_id = 1 AND ac_sub.if_main = 1)
+);
+
+
+
+
+
       SET counter1 = counter1 + 1;
     END WHILE;
       
